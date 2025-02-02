@@ -39,4 +39,39 @@ This repository houses a comprehensive, 30-module curriculum engineered to trans
 
 ## 🗺️ 6-Month Learning Roadmap
 
-> *Curriculum modules currently being drafted.*
+```mermaid
+flowchart TD
+    subgraph PhaseA["🟢 Phase A: Git Foundations (Month 1)"]
+        M01["01: Intro to VCS"] --> M02["02: Install & Config"]
+        M02 --> M03["03: First Repo"]
+        M03 --> M04["04: Staging & History"]
+        M04 --> M05["05: Branching Basics"]
+        M05 --> M06["06: Merging & Conflicts"]
+    end
+
+    subgraph PhaseB["🟡 Phase B: Intermediate Git & Collaboration (Month 2)"]
+        M07["07: Remote Repos & GitHub"] --> M08["08: Push, Pull & Fetch"]
+        M08 --> M09["09: Rebasing & Cherry-Pick"]
+        M09 --> M10["10: Stashing & Cleaning"]
+        M10 --> M11["11: Tags & SemVer"]
+        M11 --> M12["12: Diff, Blame & Bisect"]
+    end
+
+    subgraph PhaseC["🔵 Phase C: Advanced Git & Internals (Month 3)"]
+        M13["13: Objects, SHA & DAG"] --> M14["14: Reset, Revert & Reflog"]
+        M14 --> M15["15: Interactive Rebase"]
+        M15 --> M16["16: Hooks & Automation"]
+        M16 --> M17["17: Submodules & Subtrees"]
+        M17 --> M18["18: Advanced Merge Strategies"]
+    end
+
+    subgraph PhaseD["🟣 Phase D: GitHub Deep-Dive & CI/CD (Month 4)"]
+        M19["19: Issues & Project Boards"] --> M20["20: PRs & Code Reviews"]
+        M20 --> M21["21: Branch Protection & CODEOWNERS"]
+
+---
+
+## 🧭 How to Use This Coursework
+
+1. Follow modules in order
+2. Practice every command
