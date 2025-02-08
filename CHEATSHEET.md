@@ -51,3 +51,45 @@ git commit --fixup=<SHA>          # Create fixup commit
 
 ## 🔍 Viewing & Diffing
 
+```bash
+git log                           # Full log
+git log --oneline                 # Compact log
+git log --oneline --graph --all   # Visual branch graph
+git log -n 5                      # Last 5 commits
+git log --author="Name"           # Filter by author
+git log --since="2 weeks ago"     # Filter by date
+git log -S "searchterm"           # Pickaxe: find string changes
+git log -L :function:file.js      # Log for a function
+
+git diff                          # Unstaged changes
+git diff --staged                 # Staged changes
+git diff HEAD                     # All changes vs last commit
+git diff main..feature            # Between branches
+git diff --stat                   # Summary only
+git diff --word-diff              # Word-level diff
+
+git show <SHA>                    # Show commit details
+git blame <file>                  # Who changed each line
+git blame -L 10,20 <file>        # Blame specific lines
+git shortlog -sne                 # Contribution summary
+```
+
+---
+
+## 🌿 Branching
+
+```bash
+git branch                        # List local branches
+git branch -a                     # List all (local + remote)
+git branch <name>                 # Create branch
+git branch -d <name>              # Delete (safe)
+git branch -D <name>              # Delete (force)
+git branch -m <old> <new>         # Rename
+
+git switch <branch>               # Switch branch
+git switch -c <name>              # Create + switch
+git checkout <branch>             # Switch (legacy)
+git checkout -b <name>            # Create + switch (legacy)
+```
+
+---
