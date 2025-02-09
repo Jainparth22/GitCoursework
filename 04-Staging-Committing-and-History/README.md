@@ -151,7 +151,167 @@ M  app.js         # M = Modified (staged)
 
 ---
 
+## 4. `git log` — Navigating History
+
+### How `git log` Traverses the DAG
+
+> *[Visual Diagram: Architecture & Workflow]*
+
+### Common Log Formats
+
+```bash
+# Default (verbose)
+git log
+
+# One-line summary
+git log --oneline
+
+# Visual branch graph
+git log --oneline --graph --all --decorate
+
+# With file changes
+git log --stat
+
+# With actual diff
+git log -p
+
+# Last N commits
+git log -n 5
+
+# By author
+git log --author="Parth"
+
+# By date range
+git log --since="2024-01-01" --until="2024-12-31"
+
+# By message content
+git log --grep="fix"
+
+# Commits that changed a specific file
+git log -- path/to/file.js
+
+# Commits where a string was added/removed
+git log -S "functionName"
+```
+
+### Log Output Components
+
+> *[Visual Diagram: Architecture & Workflow]*
 
 ---
 
-> *Note: Practical exercises and advanced topics currently being drafted.*
+## 5. `git diff` — Understanding Changes
+
+### What `git diff` Compares
+
+> *[Visual Diagram: Architecture & Workflow]*
+
+### Reading Diff Output
+
+```diff
+diff --git a/app.js b/app.js
+index abc1234..def5678 100644
+--- a/app.js              ← Old version (a/)
++++ b/app.js              ← New version (b/)
+@@ -10,7 +10,9 @@ function login(user) {  ← Hunk header
+   const token = generateToken(user);     ← Context (unchanged)
+-  return { success: true };              ← Removed (red)
++  return {                               ← Added (green)
++    success: true,                       ← Added
++    token: token                         ← Added
++  };                                     ← Added
+ }                                        ← Context
+```
+
+### Hunk Header Explained
+
+> *[Visual Diagram: Architecture & Workflow]*
+
+### Diff Variations
+
+```bash
+# Unstaged changes
+git diff
+
+# Staged changes (about to commit)
+git diff --staged
+
+# All changes vs last commit
+git diff HEAD
+
+# Between two commits
+git diff abc123 def456
+
+# Between branches
+git diff main..feature
+
+# Summary only (no actual diff)
+git diff --stat
+git diff --name-only
+git diff --name-status
+
+# Word-level diff
+git diff --word-diff
+
+# Ignore whitespace
+git diff -w
+```
+
+---
+
+## 6. File Management Commands
+
+### `git rm` — Removing Files
+
+> *[Visual Diagram: Architecture & Workflow]*
+
+```bash
+# Remove file from Git AND filesystem
+git rm file.txt
+
+# Remove from Git tracking only (keep file on disk)
+git rm --cached file.txt
+# Useful when you accidentally committed a file that should be ignored
+```
+
+### `git mv` — Moving/Renaming Files
+
+```bash
+# Rename a file
+git mv old-name.js new-name.js
+# Equivalent to: mv old.js new.js && git rm old.js && git add new.js
+
+# Move to a different directory
+git mv file.js src/file.js
+```
+
+---
+
+## 7. The Complete Workflow
+
+> *[Visual Diagram: Architecture & Workflow]*
+
+---
+
+## 🏋️ Exercises
+
+1. Create 3 files, stage them in two separate commits using `git add -p`
+2. Write 5 commits following Conventional Commit format
+3. Use `git log --oneline --graph` to visualize your history
+4. Use `git diff` before and after staging to understand the difference
+5. Practice `git rm --cached` to untrack a file without deleting it
+
+---
+
+## 🔑 Key Takeaways
+
+1. `git add` creates blob objects and updates the index (staging area)
+2. `git commit` creates tree + commit objects and moves the branch pointer
+3. `git add -p` enables **partial staging** for clean, focused commits
+4. `git diff` compares different areas; `--staged` compares index to last commit
+5. Commit messages should be imperative, descriptive, and explain **why**
+6. `git status` shows differences between all three areas simultaneously
+
+---
+
+**[← Module 03](../03-Your-First-Repository/README.md)** | **[Module 05 →](../05-Branching-Basics/README.md)**
