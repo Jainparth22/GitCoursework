@@ -23,3 +23,18 @@
 | **Conventional Commits** | A commit message convention: `<type>(<scope>): <description>` enabling automated versioning. |
 | **CLA** | Contributor License Agreement — legal document signed by contributors to license their contributions. |
 | **DCO** | Developer Certificate of Origin — lightweight alternative to CLA, added via `Signed-off-by` trailer. |
+| **Dependabot** | GitHub's automated tool for keeping dependencies up to date and flagging security vulnerabilities. |
+| **Detached HEAD** | State where HEAD points to a commit directly rather than a branch reference. |
+| **Diff** | The difference between two states (files, commits, branches). Output shows added/removed lines. |
+| **Fast-Forward Merge** | A merge where the target branch pointer simply moves forward (no merge commit needed). |
+| **Fetch** | Downloading objects and refs from a remote without merging (`git fetch`). |
+| **Feature Flag** | A conditional in code that enables/disables features without deploying new code. Used in trunk-based development. |
+| **Fork** | A GitHub copy of another user's repository under your account. Enables contribution without direct access. |
+| **Git Flow** | A branching model with `main`, `develop`, `feature/*`, `release/*`, and `hotfix/*` branches. |
+| **GitHub Actions** | GitHub's built-in CI/CD platform. Workflows defined in YAML run on events (push, PR, schedule). |
+| **GitHub Flow** | A simplified branching model: `main` + feature branches → PRs → deploy on merge. |
+| **GitOps** | Using Git as the single source of truth for both application code and infrastructure configuration. |
+| **Gitignore** | A `.gitignore` file specifying patterns of files Git should not track. |
+| **GPG Signing** | Cryptographically signing commits or tags with a GPG key to verify authorship. |
+| **HEAD** | A pointer to the current commit (usually via the current branch). Determines what you see in the working directory. |
+| **Hook** | A script Git runs automatically before or after events (commit, push, merge). Located in `.git/hooks/`. |
