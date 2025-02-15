@@ -93,3 +93,48 @@ git checkout -b <name>            # Create + switch (legacy)
 ```
 
 ---
+
+## 🔀 Merging & Rebasing
+
+```bash
+# Merging
+git merge <branch>                # Merge into current
+git merge --no-ff <branch>        # Force merge commit
+git merge --squash <branch>       # Squash merge
+git merge --abort                 # Cancel merge
+git merge -X ours <branch>        # Prefer our side on conflicts
+git merge -X theirs <branch>      # Prefer their side on conflicts
+git merge -s ours <branch>        # Ignore all their changes
+
+# Rebasing
+git rebase <branch>               # Rebase onto branch
+git rebase -i HEAD~N              # Interactive rebase (last N)
+git rebase -i --autosquash <base> # Auto-arrange fixup commits
+git rebase --abort                # Cancel rebase
+git rebase --continue             # Continue after fix
+
+# Cherry-picking
+git cherry-pick <SHA>             # Apply specific commit
+git cherry-pick --no-commit <SHA> # Apply without committing
+```
+
+---
+
+## 🌐 Remote Operations
+
+```bash
+git remote -v                     # List remotes
+git remote add <name> <url>       # Add remote
+git remote remove <name>          # Remove remote
+git remote set-url <name> <url>   # Change URL
+
+git fetch                         # Download remote changes
+git fetch --all                   # Fetch all remotes
+git pull                          # Fetch + merge
+git pull --rebase                 # Fetch + rebase
+
+git push                          # Push to tracking branch
+git push -u origin <branch>       # Push + set tracking
+git push origin --delete <branch> # Delete remote branch
+git push --tags                   # Push all tags
+git push --force-with-lease       # Safe force push
