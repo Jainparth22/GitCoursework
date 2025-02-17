@@ -13,7 +13,57 @@
 
 ---
 
+## 1. What Is Rebase? — The Internal Mechanics
+
+Rebase **re-applies** your commits on top of a different base commit, creating **new commits** with new SHAs.
+
+### Before vs After
+
+> *[Visual Diagram: Architecture & Workflow]*
+
+> *[Visual Diagram: Architecture & Workflow]*
+
+> The `'` marks indicate these are **new commits** — same changes but different parent, so different SHA.
+
+### Step-by-Step: What Git Does Internally
+
+> *[Visual Diagram: Architecture & Workflow]*
+
+### Rebase Algorithm Flowchart
+
+> *[Visual Diagram: Architecture & Workflow]*
 
 ---
 
-> *Note: Walkthroughs and exercises currently being drafted.*
+## 2. Merge vs Rebase — Visual Comparison
+
+### Merge: Preserves True History
+
+> *[Visual Diagram: Architecture & Workflow]*
+
+### Rebase: Creates Linear History
+
+> *[Visual Diagram: Architecture & Workflow]*
+
+### Decision Flowchart
+
+> *[Visual Diagram: Architecture & Workflow]*
+
+---
+
+## 3. The Golden Rule of Rebasing
+
+> **🚨 NEVER rebase commits that have been pushed to a shared branch.**
+
+> *[Visual Diagram: Architecture & Workflow]*
+
+### Why?
+
+> *[Visual Diagram: Architecture & Workflow]*
+
+---
+
+
+---
+
+> *Note: Practical exercises and advanced topics currently being drafted.*
