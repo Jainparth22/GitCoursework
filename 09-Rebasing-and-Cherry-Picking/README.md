@@ -63,7 +63,67 @@ Rebase **re-applies** your commits on top of a different base commit, creating *
 
 ---
 
+## 4. Cherry-Pick — How It Works
+
+Cherry-pick **copies the changes** from a specific commit and applies them as a **new commit** on your current branch.
+
+> *[Visual Diagram: Architecture & Workflow]*
+
+> *[Visual Diagram: Architecture & Workflow]*
+
+### Cherry-Pick Internally
+
+> *[Visual Diagram: Architecture & Workflow]*
+
+```bash
+# Cherry-pick a single commit
+git cherry-pick abc1234
+
+# Cherry-pick without committing (stage only)
+git cherry-pick --no-commit abc1234
+
+# Cherry-pick multiple commits
+git cherry-pick abc1234 def5678
+
+# Cherry-pick a range
+git cherry-pick abc1234..def5678  # Exclusive start
+git cherry-pick abc1234^..def5678 # Inclusive start
+
+# Abort cherry-pick (on conflict)
+git cherry-pick --abort
+```
+
+### When to Use Cherry-Pick
+
+> *[Visual Diagram: Architecture & Workflow]*
 
 ---
 
-> *Note: Practical exercises and advanced topics currently being drafted.*
+## 5. Rebase Conflict Resolution
+
+> *[Visual Diagram: Architecture & Workflow]*
+
+---
+
+## 🏋️ Exercises
+
+1. Create a feature branch, add commits on both branches, then rebase
+2. Compare `git log --graph` before and after rebase vs merge
+3. Cherry-pick a specific commit from one branch to another
+4. Practice resolving rebase conflicts with `--continue` and `--abort`
+5. Try cherry-picking a range of commits
+
+---
+
+## 🔑 Key Takeaways
+
+1. Rebase **replays commits** on a new base — creates new SHAs
+2. **Merge preserves history** (non-linear); **rebase creates linear history**
+3. 🚨 **Never rebase public/shared branches** — it rewrites history
+4. Cherry-pick copies a single commit's changes as a new commit
+5. During rebase conflicts: resolve → `git add` → `git rebase --continue`
+6. Use rebase for local cleanup; merge for integrating shared branches
+
+---
+
+**[← Module 08](../08-Collaboration-Push-Pull-Fetch/README.md)** | **[Module 10 →](../10-Stashing-and-Cleaning/README.md)**
