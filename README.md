@@ -68,6 +68,46 @@ flowchart TD
     subgraph PhaseD["🟣 Phase D: GitHub Deep-Dive & CI/CD (Month 4)"]
         M19["19: Issues & Project Boards"] --> M20["20: PRs & Code Reviews"]
         M20 --> M21["21: Branch Protection & CODEOWNERS"]
+        M21 --> M22["22: Actions CI/CD Fundamentals"]
+        M22 --> M23["23: Actions Advanced Workflows"]
+        M23 --> M24["24: Security & Dependabot"]
+    end
+
+    subgraph PhaseE["⚫ Phase E: DevOps & Capstone (Months 5 & 6)"]
+        M25["25: Git Flow & Branching"] --> M26["26: Open-Source Guide"]
+        M26 --> M27["27: Monorepos & Scaling"]
+        M27 --> M28["28: Repo Best Practices"]
+        M28 --> M29["29: Git in Production & GitOps"]
+        M29 --> M30["30: Capstone Project 🏆"]
+    end
+
+    PhaseA --> PhaseB --> PhaseC --> PhaseD --> PhaseE
+
+    style PhaseA fill:#e8f5e9,stroke:#4caf50,stroke-width:2px
+    style PhaseB fill:#fffde7,stroke:#fbc02d,stroke-width:2px
+    style PhaseC fill:#e3f2fd,stroke:#1e88e5,stroke-width:2px
+    style PhaseD fill:#f3e5f5,stroke:#8e24aa,stroke-width:2px
+    style PhaseE fill:#eceff1,stroke:#37474f,stroke-width:2px
+    style M30 fill:#ffd54f,stroke:#ff8f00,stroke-width:3px
+```
+
+---
+
+## 📚 Curriculum Index
+
+### 🟢 Phase A — Git Foundations (Beginner)
+*Master the foundational mental models, the 3 areas of Git, local branch operations, and conflict resolution.*
+
+| # | Module | Core Topics | Est. Time | Status |
+|---|--------|-------------|-----------|:------:|
+| 01 | [Introduction to Version Control](./01-Introduction-to-Version-Control/README.md) | VCS Evolution, Centralized vs Distributed, Snapshot model, 3 Areas of Git | 2.0 hrs | ![Ready](https://img.shields.io/badge/-Ready-brightgreen) |
+| 02 | [Git Installation & Configuration](./02-Git-Installation-and-Configuration/README.md) | Multi-OS Setup, Config Hierarchy, SSH Authentication, GPG Signing | 1.5 hrs | ![Ready](https://img.shields.io/badge/-Ready-brightgreen) |
+| 03 | [Your First Repository](./03-Your-First-Repository/README.md) | `git init`, `.git` Anatomy, Object Directory, `git clone` Mechanics | 2.0 hrs | ![Ready](https://img.shields.io/badge/-Ready-brightgreen) |
+| 04 | [Staging, Committing & History](./04-Staging-Committing-and-History/README.md) | Index Mechanics, Atomic Commits, `git log` Filtering, `.gitignore` Rules | 3.0 hrs | ![Ready](https://img.shields.io/badge/-Ready-brightgreen) |
+| 05 | [Branching Basics](./05-Branching-Basics/README.md) | Pointer Mechanics, `HEAD` Dereferencing, `switch` vs `checkout`, Detached `HEAD` | 2.5 hrs | ![Ready](https://img.shields.io/badge/-Ready-brightgreen) |
+| 06 | [Merging & Conflict Resolution](./06-Merging-and-Conflict-Resolution/README.md) | Fast-Forward, 3-Way Merge, Conflict Markers, `git mergetool` Integration | 3.0 hrs | ![Ready](https://img.shields.io/badge/-Ready-brightgreen) |
+
+---
 
 ---
 
