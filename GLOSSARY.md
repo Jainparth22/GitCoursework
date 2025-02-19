@@ -38,3 +38,18 @@
 | **GPG Signing** | Cryptographically signing commits or tags with a GPG key to verify authorship. |
 | **HEAD** | A pointer to the current commit (usually via the current branch). Determines what you see in the working directory. |
 | **Hook** | A script Git runs automatically before or after events (commit, push, merge). Located in `.git/hooks/`. |
+| **Husky** | A Node.js tool for managing Git hooks in a project, making them easily shareable. |
+| **Index** | Another name for the staging area. The `.git/index` file tracks what will go in the next commit. |
+| **Interactive Rebase** | `git rebase -i` — allows you to edit, squash, reorder, and drop commits. |
+| **LFS** | Large File Storage — Git extension for tracking large binary files with pointers instead of full content. |
+| **Lightweight Tag** | A simple pointer to a commit (just a name → SHA). No metadata stored. |
+| **Lint-staged** | Tool that runs linters only on staged files, combined with Husky for pre-commit checks. |
+| **Merge** | Combining changes from one branch into another. Creates a merge commit (unless fast-forward). |
+| **Merge Commit** | A commit with two or more parents, representing the combination of branches. |
+| **Monorepo** | A single repository containing multiple projects or packages. Used by Google, Meta, and Microsoft. |
+| **Object** | The four types of Git internal storage: blob, tree, commit, and tag. Each addressed by SHA-1 hash. |
+| **Origin** | The default name for the remote repository you cloned from. |
+| **Packfile** | Compressed storage format Git uses to efficiently store many objects together. |
+| **Patch** | A text file describing changes to apply. Can be created with `git format-patch` and applied with `git am`. |
+| **Plumbing** | Low-level Git commands that perform single operations (e.g., `cat-file`, `hash-object`). |
+| **Polyrepo** | Architecture where each project or service has its own separate Git repository. |
