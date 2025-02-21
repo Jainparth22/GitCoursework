@@ -89,7 +89,47 @@ v1.0.0            ← Stable release
 
 ---
 
+## 4. GitHub Releases
+
+> *[Visual Diagram: Architecture & Workflow]*
+
+```bash
+# Create release via GitHub CLI
+gh release create v1.0.0 --title "v1.0.0" --notes "First release"
+
+# Auto-generate notes from commit history
+gh release create v1.0.0 --generate-notes
+
+# Create release with assets
+gh release create v1.0.0 ./dist/app.zip --title "v1.0.0"
+
+# Create draft release
+gh release create v1.0.0 --draft
+
+# List releases
+gh release list
+```
 
 ---
 
-> *Note: Practical exercises and advanced topics currently being drafted.*
+## 🏋️ Exercises
+
+1. Create both lightweight and annotated tags and compare with `git show`
+2. Tag a past commit and push the tag to GitHub
+3. Delete a tag locally and remotely
+4. Create a GitHub Release with auto-generated notes using `gh release create`
+5. Practice SemVer: given a changelog, determine the correct version bump
+
+---
+
+## 🔑 Key Takeaways
+
+1. Tags are **permanent pointers** — they don't move like branches
+2. Use **annotated tags** for releases (includes metadata and can be signed)
+3. SemVer: MAJOR (breaking) . MINOR (features) . PATCH (fixes)
+4. GitHub Releases wrap tags with release notes and downloadable assets
+5. Always push tags explicitly — `git push` doesn't push tags by default
+
+---
+
+**[← Module 10](../10-Stashing-and-Cleaning/README.md)** | **[Module 12 →](../12-Git-Diff-Blame-and-Bisect/README.md)**
