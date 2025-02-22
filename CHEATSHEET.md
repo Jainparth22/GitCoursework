@@ -138,3 +138,48 @@ git push -u origin <branch>       # Push + set tracking
 git push origin --delete <branch> # Delete remote branch
 git push --tags                   # Push all tags
 git push --force-with-lease       # Safe force push
+```
+
+---
+
+## 🏷️ Tags & Releases
+
+```bash
+git tag                           # List tags
+git tag <name>                    # Lightweight tag
+git tag -a <name> -m "msg"        # Annotated tag
+git tag -a <name> <SHA> -m "msg"  # Tag specific commit
+git tag -d <name>                 # Delete local tag
+git push origin <tag>             # Push single tag
+git push origin --tags            # Push all tags
+git push origin --delete <tag>    # Delete remote tag
+```
+
+---
+
+## ⏪ Undo & Recovery
+
+```bash
+# Unstage
+git restore --staged <file>       # Unstage file
+git reset HEAD <file>             # Unstage (legacy)
+
+# Discard changes
+git restore <file>                # Discard working directory changes
+git checkout -- <file>            # Discard (legacy)
+
+# Reset (move branch pointer)
+git reset --soft HEAD~1           # Undo commit, keep staged
+git reset HEAD~1                  # Undo commit, keep unstaged
+git reset --hard HEAD~1           # ⚠️ Undo commit + discard changes
+
+# Safe undo (creates new commit)
+git revert <SHA>                  # Revert a specific commit
+git revert -m 1 <merge-SHA>      # Revert a merge commit
+
+# Recovery
+git reflog                        # View HEAD movement history
+git reset --hard HEAD@{n}         # Recover from reflog
+```
+
+---
