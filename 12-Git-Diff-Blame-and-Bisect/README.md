@@ -173,7 +173,31 @@ git bisect run npm test
 
 ---
 
+## 4. Combining Tools — Investigation Workflow
+
+> *[Visual Diagram: Architecture & Workflow]*
 
 ---
 
-> *Note: Practical exercises and advanced topics currently being drafted.*
+## 🏋️ Exercises
+
+1. Use `git diff --word-diff` to compare line-level vs word-level diffs
+2. Run `git blame` on a file and trace a line back to its original commit
+3. Simulate a bug: make 10 commits, introduce a bug midway, use `git bisect` to find it
+4. Try automated bisect: `git bisect run` with a test script
+5. Compare `main..feature` vs `main...feature` diff output
+
+---
+
+## 🔑 Key Takeaways
+
+1. `git diff` compares working dir, staging, and commits — know which you're comparing
+2. **Two dots** (`..`) = total difference; **three dots** (`...`) = changes since divergence
+3. `git blame` shows the last commit that modified each line — great for accountability
+4. `git bisect` uses binary search — finds bugs in O(log n) instead of O(n)
+5. Automated bisect (`git bisect run`) is the most efficient debugging tool in Git
+6. Combine diff + blame + bisect for a complete investigation workflow
+
+---
+
+**[← Module 11](../11-Tags-Releases-and-Semantic-Versioning/README.md)** | **[Module 13 →](../13-Git-Internals-Objects-SHA-DAG/README.md)**
