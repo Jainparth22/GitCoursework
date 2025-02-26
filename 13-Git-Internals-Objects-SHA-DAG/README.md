@@ -127,7 +127,90 @@ Git's commit history forms a DAG — a graph where commits point to their parent
 
 ---
 
+## 4. SHA-1 Hashing — How It Works
+
+> *[Visual Diagram: Architecture & Workflow]*
+
+### How Git Computes a Blob Hash
+
+```bash
+# What Git actually hashes (for "Hello World\n"):
+# "blob 12\0Hello World\n"
+#  ↑     ↑  ↑
+#  type  size null-byte + content
+
+# Verify manually:
+printf "blob 12\0Hello World\n" | sha1sum
+# Output: 557db03de997c86a4a028e1ebd3a1ceb225be238
+```
 
 ---
 
-> *Note: Practical exercises and advanced topics currently being drafted.*
+## 5. Packfiles — How Git Optimizes Storage
+
+Over time, Git packs loose objects into efficient packfiles:
+
+> *[Visual Diagram: Architecture & Workflow]*
+
+```bash
+# View object statistics
+git count-objects -v
+
+# Trigger garbage collection
+git gc
+
+# Verify object database integrity
+git fsck
+```
+
+---
+
+## 6. Plumbing vs Porcelain Commands
+
+> *[Visual Diagram: Architecture & Workflow]*
+
+### Essential Plumbing Commands
+
+```bash
+# READING objects
+git cat-file -t <SHA>      # Object type
+git cat-file -p <SHA>      # Object content (pretty print)
+git cat-file -s <SHA>      # Object size
+git ls-tree <tree-SHA>     # List tree contents
+
+# WRITING objects
+git hash-object -w <file>  # Write blob to object database
+git write-tree             # Write staging area as tree object
+git commit-tree <tree>     # Create commit from tree
+
+# REFERENCES
+git rev-parse HEAD         # Resolve ref to SHA
+git update-ref refs/heads/main <SHA>  # Update branch pointer
+git symbolic-ref HEAD      # What does HEAD point to?
+```
+
+---
+
+## 🏋️ Exercises
+
+1. Use `git cat-file -p HEAD` to explore your latest commit's tree structure
+2. Follow the chain: commit → tree → blob manually using `cat-file`
+3. Create a blob manually: `echo "test" | git hash-object -w --stdin`
+4. Verify that two files with identical content share the same blob SHA
+5. Run `git count-objects -v` and then `git gc`, compare results
+6. Draw the complete object graph of your last 3 commits
+
+---
+
+## 🔑 Key Takeaways
+
+1. Git stores everything as **objects** (blob, tree, commit, tag) addressed by SHA-1 hash
+2. **Blobs** store content (no filename); **Trees** map names to blobs; **Commits** point to trees
+3. Same content = same hash = same blob (deduplication built-in)
+4. Git's history is a **DAG** — directed acyclic graph of commits
+5. **Packfiles** compress objects using delta encoding for storage efficiency
+6. Porcelain = user-friendly commands; Plumbing = low-level building blocks
+
+---
+
+**[← Module 12](../12-Git-Diff-Blame-and-Bisect/README.md)** | **[Module 14 →](../14-Reset-Revert-and-Reflog/README.md)**
