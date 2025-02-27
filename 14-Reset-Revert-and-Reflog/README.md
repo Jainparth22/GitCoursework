@@ -91,7 +91,75 @@ git revert --abort
 
 ---
 
+## 4. `git reflog` — Your Safety Net
+
+The reflog records **every time HEAD moves** — it's your undo history.
+
+### How Reflog Works Internally
+
+> *[Visual Diagram: Architecture & Workflow]*
+
+```bash
+# View reflog
+git reflog
+# abc1234 HEAD@{0}: commit: feat: add search
+# def5678 HEAD@{1}: checkout: moving from feature to main
+# ghi9012 HEAD@{2}: reset: moving to HEAD~1
+# jkl3456 HEAD@{3}: commit: this was "lost"!
+
+# Recover from accidental reset
+git reset --hard HEAD@{3}
+# This restores to jkl3456 — the "lost" commit!
+```
+
+### Disaster Recovery Scenarios
+
+> *[Visual Diagram: Architecture & Workflow]*
+
+### Reflog Expiry
+
+```bash
+# Reflog entries expire after 90 days by default
+# Unreachable entries expire after 30 days
+
+# Configure expiry
+git config gc.reflogExpire 120.days
+git config gc.reflogExpireUnreachable 60.days
+
+# View reflog for a specific branch
+git reflog show feature/login
+
+# View with dates
+git reflog --date=relative
+```
 
 ---
 
-> *Note: Practical exercises and advanced topics currently being drafted.*
+## 5. Complete Undo Strategy Decision Tree
+
+> *[Visual Diagram: Architecture & Workflow]*
+
+---
+
+## 🏋️ Exercises
+
+1. Create 3 commits, then `reset --soft` and observe staged files
+2. Try `reset --mixed` and see changes become unstaged
+3. Try `reset --hard` and verify changes are gone, then recover with `reflog`
+4. Revert a specific commit and verify history is preserved
+5. Delete a branch, then recover it using `reflog`
+
+---
+
+## 🔑 Key Takeaways
+
+1. `reset --soft` = undo commit (keep staged); `--mixed` = undo + unstage; `--hard` = destroy all
+2. **Reset rewrites history** — never use on shared/pushed branches
+3. **Revert is safe** — creates a new commit that undoes changes
+4. **Reflog is your safety net** — records every HEAD movement for 90 days
+5. Even `--hard` reset can be recovered via reflog (within the expiry period)
+6. When in doubt: **revert** (safe) instead of **reset** (destructive)
+
+---
+
+**[← Module 13](../13-Git-Internals-Objects-SHA-DAG/README.md)** | **[Module 15 →](../15-Interactive-Rebase-and-History-Rewriting/README.md)**
