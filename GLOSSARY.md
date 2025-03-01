@@ -53,3 +53,18 @@
 | **Patch** | A text file describing changes to apply. Can be created with `git format-patch` and applied with `git am`. |
 | **Plumbing** | Low-level Git commands that perform single operations (e.g., `cat-file`, `hash-object`). |
 | **Polyrepo** | Architecture where each project or service has its own separate Git repository. |
+| **Porcelain** | High-level, user-friendly Git commands (e.g., `add`, `commit`, `push`). Built on plumbing. |
+| **Pull** | Fetch + merge from a remote branch in one command (`git pull`). |
+| **Pull Request (PR)** | A GitHub feature requesting that changes from one branch be merged into another, with code review. |
+| **Push** | Uploading local commits to a remote repository (`git push`). |
+| **Push Protection** | GitHub feature that blocks pushes containing detected secrets before they reach the repo. |
+| **Rebase** | Re-applying commits on top of a different base commit. Creates a linear history. |
+| **Ref** | A reference (pointer) to a commit — branches, tags, and HEAD are all refs. Stored in `.git/refs/`. |
+| **Reflog** | Reference log — records every time HEAD or a branch pointer moves. Used for disaster recovery. |
+| **Remote** | A connection to another copy of the repository (usually on GitHub). Managed with `git remote`. |
+| **Repository (Repo)** | A directory tracked by Git, containing the full project history in `.git/`. |
+| **Rerere** | "Reuse Recorded Resolution" — Git remembers how you resolved conflicts and auto-applies next time. |
+| **Reset** | Move the branch pointer to a different commit. Modes: `--soft`, `--mixed`, `--hard`. |
+| **Revert** | Create a new commit that undoes a previous commit's changes. Safe for shared branches. |
+| **Ruleset** | GitHub's modern alternative to branch protection rules. Supports multiple branches and bypass lists. |
+| **Runner** | The server that executes GitHub Actions workflow jobs (e.g., `ubuntu-latest`, self-hosted). |
