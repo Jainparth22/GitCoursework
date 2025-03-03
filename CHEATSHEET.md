@@ -183,3 +183,48 @@ git reset --hard HEAD@{n}         # Recover from reflog
 ```
 
 ---
+
+## 📦 Stash & Clean
+
+```bash
+git stash                         # Stash changes
+git stash push -m "description"   # Stash with message
+git stash -u                      # Include untracked files
+git stash list                    # List stashes
+git stash pop                     # Apply + remove latest
+git stash apply stash@{n}        # Apply specific stash
+git stash drop stash@{n}         # Delete specific stash
+git stash clear                   # Delete all stashes
+
+git clean -n                      # Preview untracked deletions
+git clean -fd                     # Remove untracked files + dirs
+```
+
+---
+
+## 🐛 Debugging
+
+```bash
+git bisect start                  # Start binary search
+git bisect bad                    # Mark current as bad
+git bisect good <SHA>             # Mark known good
+git bisect good / bad             # Keep narrowing
+git bisect run <script>           # Automate with test script
+git bisect reset                  # End bisect
+
+git grep "pattern"                # Search working tree
+git grep -n "pattern"             # With line numbers
+```
+
+---
+
+## 🔬 Internals (Plumbing)
+
+```bash
+git cat-file -t <SHA>             # Object type
+git cat-file -p <SHA>             # Object content
+git cat-file -s <SHA>             # Object size
+git ls-tree HEAD                  # Tree contents
+git ls-tree -r HEAD               # Recursive tree
+git hash-object -w <file>         # Create blob object
+git rev-parse HEAD                # Resolve ref to SHA
