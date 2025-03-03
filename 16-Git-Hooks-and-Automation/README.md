@@ -87,7 +87,68 @@ exit 0
 
 ---
 
+## 4. Husky — Modern Hook Management
+
+> *[Visual Diagram: Architecture & Workflow]*
+
+```bash
+# Install Husky
+npm install --save-dev husky
+
+# Initialize
+npx husky init
+
+# Create pre-commit hook
+echo "npm run lint" > .husky/pre-commit
+
+# Create commit-msg hook
+echo 'npx commitlint --edit "$1"' > .husky/commit-msg
+```
 
 ---
 
-> *Note: Practical exercises and advanced topics currently being drafted.*
+## 5. lint-staged — Only Lint Staged Files
+
+> *[Visual Diagram: Architecture & Workflow]*
+
+```json
+// package.json
+{
+  "lint-staged": {
+    "*.{js,ts}": ["eslint --fix", "prettier --write"],
+    "*.{css,scss}": ["prettier --write"],
+    "*.{json,md}": ["prettier --write"]
+  }
+}
+```
+
+---
+
+## 6. Complete Hook Pipeline
+
+> *[Visual Diagram: Architecture & Workflow]*
+
+---
+
+## 🏋️ Exercises
+
+1. Create a `pre-commit` hook that prevents committing `console.log` statements
+2. Create a `commit-msg` hook that enforces Conventional Commits format
+3. Set up Husky + lint-staged in a Node.js project
+4. Create a `pre-push` hook that runs tests before pushing
+5. Try adding a hook that fails — observe how Git prevents the operation
+
+---
+
+## 🔑 Key Takeaways
+
+1. Git hooks are scripts that run automatically at specific workflow points
+2. Exit code 0 = proceed; non-zero = abort the operation
+3. `.git/hooks/` is **not tracked** by Git — use Husky to share hooks via version control
+4. **lint-staged** only checks staged files — fast and focused
+5. Common pipeline: lint → format → test → validate message → commit
+6. Hooks enforce quality gates automatically — no manual checks needed
+
+---
+
+**[← Module 15](../15-Interactive-Rebase-and-History-Rewriting/README.md)** | **[Module 17 →](../17-Submodules-and-Subtrees/README.md)**
