@@ -109,6 +109,46 @@ flowchart TD
 
 ---
 
+### 🟡 Phase B — Intermediate Git & Collaboration
+*Learn remote collaboration patterns, linear rebasing, stash internals, and automated debugging with bisect.*
+
+| # | Module | Core Topics | Est. Time | Status |
+|---|--------|-------------|-----------|:------:|
+| 07 | [Remote Repositories & GitHub Basics](./07-Remote-Repositories-and-GitHub-Basics/README.md) | Remotes, `origin` Architecture, HTTPS vs SSH, GitHub Web UI Tour | 3.0 hrs | ![Ready](https://img.shields.io/badge/-Ready-brightgreen) |
+| 08 | [Collaboration — Push, Pull, Fetch](./08-Collaboration-Push-Pull-Fetch/README.md) | Upstream Tracking, `git fetch` vs `git pull`, Fast-Forward Pull Strategies | 3.0 hrs | ![Ready](https://img.shields.io/badge/-Ready-brightgreen) |
+| 09 | [Rebasing & Cherry-Picking](./09-Rebasing-and-Cherry-Picking/README.md) | Linear History, Base Commits, Golden Rule of Rebasing, Cherry-Picking | 3.0 hrs | ![Ready](https://img.shields.io/badge/-Ready-brightgreen) |
+| 10 | [Stashing & Cleaning](./10-Stashing-and-Cleaning/README.md) | Stash Stack LIFO Mechanics, Untracked Stashes, Git Worktrees, `git clean` | 2.0 hrs | ![Ready](https://img.shields.io/badge/-Ready-brightgreen) |
+| 11 | [Tags, Releases & Semantic Versioning](./11-Tags-Releases-and-Semantic-Versioning/README.md) | Lightweight vs Annotated Tags, Semantic Versioning (MAJOR.MINOR.PATCH), Releases | 2.5 hrs | ![Ready](https://img.shields.io/badge/-Ready-brightgreen) |
+| 12 | [Git Diff, Blame & Bisect](./12-Git-Diff-Blame-and-Bisect/README.md) | Revision Comparison, Line History with `blame`, Binary Search Debugging (`bisect`) | 2.5 hrs | ![Ready](https://img.shields.io/badge/-Ready-brightgreen) |
+
+---
+
+### 🔵 Phase C — Advanced Git & Internals
+*Unpack Git's low-level engine: content-addressable storage, DAG graphs, history rewriting, and hooks.*
+
+| # | Module | Core Topics | Est. Time | Status |
+|---|--------|-------------|-----------|:------:|
+| 13 | [Git Internals — Objects, SHA, DAG](./13-Git-Internals-Objects-SHA-DAG/README.md) | Blobs, Trees, Commits, Tags, SHA-1 Hashing, Plumbing Commands (`cat-file`) | 4.0 hrs | ![Ready](https://img.shields.io/badge/-Ready-brightgreen) |
+| 14 | [Reset, Revert & Reflog](./14-Reset-Revert-and-Reflog/README.md) | Soft vs Mixed vs Hard Resets, Safe History Reverts, Disaster Recovery via Reflog | 3.0 hrs | ![Ready](https://img.shields.io/badge/-Ready-brightgreen) |
+| 15 | [Interactive Rebase & History Rewriting](./15-Interactive-Rebase-and-History-Rewriting/README.md) | Squash, Fixup, Reorder, Drop, Edit Commits, Splitting Commits, Filter-Repo | 3.0 hrs | ![Ready](https://img.shields.io/badge/-Ready-brightgreen) |
+| 16 | [Git Hooks & Automation](./16-Git-Hooks-and-Automation/README.md) | Client vs Server Hooks, Husky Integration, `lint-staged`, Commitlint Standards | 3.0 hrs | ![Ready](https://img.shields.io/badge/-Ready-brightgreen) |
+| 17 | [Submodules & Subtrees](./17-Submodules-and-Subtrees/README.md) | Nested Repositories, Submodule Pointers, Updating & Cloning, Git Subtrees | 3.0 hrs | ![Ready](https://img.shields.io/badge/-Ready-brightgreen) |
+| 18 | [Advanced Merge Strategies](./18-Advanced-Merge-Strategies/README.md) | Recursive/Ort Strategies, Ours vs Theirs, Octopus Merges, `git rerere` | 2.5 hrs | ![Ready](https://img.shields.io/badge/-Ready-brightgreen) |
+
+---
+
+### 🟣 Phase D — GitHub Deep-Dive & CI/CD
+*Professional GitHub collaboration, branch governance, GitHub Actions automation, and security scanning.*
+
+| # | Module | Core Topics | Est. Time | Status |
+|---|--------|-------------|-----------|:------:|
+| 19 | [GitHub Issues, Projects & Wikis](./19-GitHub-Issues-Projects-and-Wikis/README.md) | Issue Templates, Milestones, Project Kanban Boards, Team Collaboration | 3.0 hrs | ![Ready](https://img.shields.io/badge/-Ready-brightgreen) |
+| 20 | [Pull Requests & Code Reviews](./20-Pull-Requests-and-Code-Reviews/README.md) | PR Lifecycle, Review Etiquette, Inline Suggestions, Draft PRs, Merge Types | 3.0 hrs | ![Ready](https://img.shields.io/badge/-Ready-brightgreen) |
+| 21 | [Branch Protection & CODEOWNERS](./21-Branch-Protection-and-CODEOWNERS/README.md) | Required Reviews, Status Checks, Linear History Enforcement, CODEOWNERS Rules | 2.5 hrs | ![Ready](https://img.shields.io/badge/-Ready-brightgreen) |
+| 22 | [GitHub Actions — CI/CD Fundamentals](./22-GitHub-Actions-CI-CD-Fundamentals/README.md) | Workflows, Runners, Events, Jobs, Steps, Secrets, Automated Testing Pipeline | 4.0 hrs | ![Ready](https://img.shields.io/badge/-Ready-brightgreen) |
+| 23 | [GitHub Actions — Advanced Workflows](./23-GitHub-Actions-Advanced-Workflows/README.md) | Matrix Strategies, Dependency Caching, Reusable Workflows, Composite Actions | 4.0 hrs | ![Ready](https://img.shields.io/badge/-Ready-brightgreen) |
+| 24 | [GitHub Security — Dependabot & Secrets](./24-GitHub-Security-Dependabot-and-Secrets/README.md) | Secret Scanning, Push Protection, Dependabot Vulnerability Alerts, CodeQL | 3.0 hrs | ![Ready](https://img.shields.io/badge/-Ready-brightgreen) |
+
 ---
 
 ## 🧭 How to Use This Coursework
