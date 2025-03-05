@@ -86,7 +86,47 @@ git subtree push --prefix=libs/ui-kit https://github.com/lib/ui-kit.git main
 
 ---
 
+## 4. Submodules vs Subtrees
+
+> *[Visual Diagram: Architecture & Workflow]*
+
+| Feature | Submodule | Subtree |
+|---------|-----------|---------|
+| Storage | Pointer (gitlink) | Actual files in repo |
+| Clone complexity | Must `--recurse-submodules` | Just works |
+| History | Separate repo history | Merged into main history |
+| Update upstream | `git submodule update --remote` | `git subtree pull` |
+| Contribute back | cd into submodule, commit | `git subtree push` |
+| Repo size | Smaller main repo | Larger (includes all files) |
+| Best for | Large libraries, strict versioning | Small shared code |
 
 ---
 
-> *Note: Practical exercises and advanced topics currently being drafted.*
+## 5. Common Submodule Pitfalls
+
+> *[Visual Diagram: Architecture & Workflow]*
+
+---
+
+## 🏋️ Exercises
+
+1. Add a public GitHub repo as a submodule to your project
+2. Clone your project fresh and observe empty submodule directories
+3. Use `--recurse-submodules` and compare the experience
+4. Update a submodule to its latest version and commit the change
+5. Try adding the same library as a subtree and compare the approaches
+
+---
+
+## 🔑 Key Takeaways
+
+1. Submodules = **pointers** to specific commits in external repos
+2. Subtrees = external code **merged directly** into your repository
+3. Submodules require explicit init/update; subtrees "just work" on clone
+4. Always use `--recurse-submodules` when cloning projects with submodules
+5. Submodules are better for large dependencies; subtrees for small shared code
+6. Submodule directories are in **detached HEAD** state by default
+
+---
+
+**[← Module 16](../16-Git-Hooks-and-Automation/README.md)** | **[Module 18 →](../18-Advanced-Merge-Strategies/README.md)**
