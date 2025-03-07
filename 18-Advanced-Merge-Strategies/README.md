@@ -84,7 +84,54 @@ git rerere diff
 
 ---
 
+## 4. Octopus Merge (3+ Branches)
+
+> *[Visual Diagram: Architecture & Workflow]*
+
+```bash
+# Merge multiple branches at once
+git merge feature-a feature-b feature-c
+# Uses octopus strategy automatically
+
+# Cannot handle conflicts — use regular merge instead
+```
 
 ---
 
-> *Note: Practical exercises and advanced topics currently being drafted.*
+## 5. Advanced Conflict Resolution Tools
+
+> *[Visual Diagram: Architecture & Workflow]*
+
+```bash
+# Set merge tool
+git config --global merge.tool vscode
+git config --global mergetool.vscode.cmd 'code --wait --merge $REMOTE $LOCAL $BASE $MERGED'
+
+# Launch merge tool for conflicts
+git mergetool
+```
+
+---
+
+## 🏋️ Exercises
+
+1. Practice `-X ours` vs `-X theirs` with conflicting branches
+2. Enable `rerere`, create a conflict, resolve it, then recreate the same conflict
+3. Try `--strategy=ours` and verify the resulting tree matches your branch exactly
+4. Merge 3 branches simultaneously using octopus strategy
+5. Configure and use `git mergetool` for conflict resolution
+
+---
+
+## 🔑 Key Takeaways
+
+1. **ort** is the default strategy — handles renames and most scenarios well
+2. `-X ours/theirs` auto-resolves **only conflicting sections** (non-conflicting changes still merge)
+3. `--strategy=ours` ignores **ALL** their changes (rarely used, but useful for placeholder merges)
+4. **rerere** saves time by remembering how you resolved conflicts
+5. Octopus merge handles 3+ branches but cannot resolve conflicts
+6. Enable `rerere` globally — it's free insurance against repeated conflicts
+
+---
+
+**[← Module 17](../17-Submodules-and-Subtrees/README.md)** | **[Module 19 →](../19-GitHub-Issues-Projects-and-Wikis/README.md)**
