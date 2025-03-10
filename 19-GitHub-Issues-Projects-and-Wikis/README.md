@@ -68,7 +68,36 @@ Resolves #42      # Same effect
 
 ---
 
+## 3. Labels Strategy
+
+| Label | Color | Purpose |
+|-------|-------|---------|
+| `bug` | 🔴 Red | Something broken |
+| `feature` | 🟢 Green | New capability |
+| `docs` | 🔵 Blue | Documentation |
+| `priority: high` | 🟠 Orange | Urgent |
+| `good first issue` | 🟣 Purple | Newcomer friendly |
+| `wontfix` | ⚪ White | Will not address |
 
 ---
 
-> *Note: Practical exercises and advanced topics currently being drafted.*
+## 🏋️ Exercises
+
+1. Create issue templates for bug reports and feature requests
+2. Set up a GitHub Project board with custom columns
+3. Create an issue, branch, and PR — verify auto-close on merge
+4. Add labels and milestones to organize your issues
+
+---
+
+## 🔑 Key Takeaways
+
+1. Issues are the **central tracking unit** for bugs, features, and tasks
+2. Templates standardize issue reporting and speed up triage
+3. Use `Closes #N` in PRs to **auto-close** issues on merge
+4. GitHub Projects v2 provides Kanban boards with automations
+5. Labels, milestones, and assignees organize work effectively
+
+---
+
+**[← Module 18](../18-Advanced-Merge-Strategies/README.md)** | **[Module 20 →](../20-Pull-Requests-and-Code-Reviews/README.md)**
