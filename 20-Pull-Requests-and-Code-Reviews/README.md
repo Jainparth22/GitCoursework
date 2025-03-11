@@ -63,7 +63,57 @@
 
 ---
 
+## 4. PR Template
+
+```markdown
+<!-- .github/pull_request_template.md -->
+
+## Description
+<!-- What does this PR do? -->
+
+## Related Issue
+Closes #
+
+## Type of Change
+- [ ] Bug fix
+- [ ] New feature
+- [ ] Breaking change
+- [ ] Documentation
+
+## Checklist
+- [ ] Tests added/updated
+- [ ] Documentation updated
+- [ ] Self-review completed
+- [ ] No console.log or debug code
+```
 
 ---
 
-> *Note: Practical exercises and advanced topics currently being drafted.*
+## 5. Draft PRs and Auto-Merge
+
+> *[Visual Diagram: Architecture & Workflow]*
+
+---
+
+## 🏋️ Exercises
+
+1. Create a PR with a detailed description using a PR template
+2. Merge three PRs using each merge strategy and compare `git log --graph`
+3. Practice code review: leave comments with proper prefixes
+4. Set up a draft PR and convert it to ready for review
+5. Enable auto-merge on a PR with required checks
+
+---
+
+## 🔑 Key Takeaways
+
+1. PRs are the standard way to propose, review, and integrate changes
+2. **Merge commit** preserves all history; **squash** cleans up; **rebase** linearizes
+3. Good reviews check correctness, design, readability, tests, and security
+4. Use PR templates to standardize the information contributors provide
+5. Draft PRs let you get early CI feedback without requesting reviews
+6. Auto-merge reduces manual work once all checks and approvals pass
+
+---
+
+**[← Module 19](../19-GitHub-Issues-Projects-and-Wikis/README.md)** | **[Module 21 →](../21-Branch-Protection-and-CODEOWNERS/README.md)**
