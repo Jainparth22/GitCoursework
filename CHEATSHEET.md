@@ -228,3 +228,43 @@ git ls-tree HEAD                  # Tree contents
 git ls-tree -r HEAD               # Recursive tree
 git hash-object -w <file>         # Create blob object
 git rev-parse HEAD                # Resolve ref to SHA
+git count-objects -v              # Object statistics
+git gc                            # Garbage collection
+```
+
+---
+
+## 🔐 GitHub CLI (`gh`)
+
+```bash
+# Pull Requests
+gh pr create --title "title"      # Create PR
+gh pr create --draft              # Draft PR
+gh pr list                        # List PRs
+gh pr view <n>                    # View PR details
+gh pr checkout <n>                # Checkout PR locally
+gh pr merge <n> --squash          # Squash merge PR
+
+# Issues
+gh issue create                   # Create issue
+gh issue list                     # List issues
+gh issue close <n>                # Close issue
+
+# Releases
+gh release create <tag>           # Create release
+gh release create <tag> --generate-notes  # Auto-notes
+gh release list                   # List releases
+
+# Repo
+gh repo create <name>             # Create repository
+gh repo clone <owner/repo>       # Clone repo
+gh repo view                      # View repo info
+```
+
+---
+
+## 🛡️ LFS & Submodules
+
+```bash
+# Git LFS
+git lfs install                   # Initialize LFS
