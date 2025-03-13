@@ -62,7 +62,35 @@ Dockerfile @org/devops-team
 
 ---
 
+## 3. GitHub Rulesets (Modern Alternative)
+
+> *[Visual Diagram: Architecture & Workflow]*
+
+Rulesets support:
+- **Multiple branch patterns** in one rule
+- **Bypass actors** (allow specific people/apps to skip rules)
+- **Tag protection** (not just branches)
+- **Organization-level** rules (apply across repos)
 
 ---
 
-> *Note: Practical exercises and advanced topics currently being drafted.*
+## 🏋️ Exercises
+
+1. Enable branch protection on `main` requiring 1 approval and CI checks
+2. Create a CODEOWNERS file with at least 3 ownership patterns
+3. Try pushing directly to a protected branch — observe the rejection
+4. Set up a Ruleset as an alternative to branch protection
+
+---
+
+## 🔑 Key Takeaways
+
+1. Branch protection prevents direct pushes and enforces quality gates
+2. CODEOWNERS auto-assigns reviewers based on file path patterns
+3. Required status checks ensure CI passes before merge
+4. Rulesets are the modern, more flexible alternative to branch protection
+5. Protection rules are essential for any team project
+
+---
+
+**[← Module 20](../20-Pull-Requests-and-Code-Reviews/README.md)** | **[Module 22 →](../22-GitHub-Actions-CI-CD-Fundamentals/README.md)**
