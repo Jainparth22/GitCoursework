@@ -68,3 +68,13 @@
 | **Revert** | Create a new commit that undoes a previous commit's changes. Safe for shared branches. |
 | **Ruleset** | GitHub's modern alternative to branch protection rules. Supports multiple branches and bypass lists. |
 | **Runner** | The server that executes GitHub Actions workflow jobs (e.g., `ubuntu-latest`, self-hosted). |
+| **Secret Scanning** | GitHub feature that detects accidentally committed secrets (API keys, tokens) in repositories. |
+| **Semantic Versioning (SemVer)** | Versioning scheme: `MAJOR.MINOR.PATCH`. Major = breaking, Minor = feature, Patch = fix. |
+| **SHA-1** | Cryptographic hash function used by Git to identify objects. Produces 40-character hex strings. |
+| **Shallow Clone** | A clone with limited history depth (`git clone --depth 1`). Faster but can't access full history. |
+| **Sparse Checkout** | Only checking out specific directories from a repository (`git sparse-checkout`). |
+| **Squash** | Combining multiple commits into a single commit. Used in PRs and interactive rebase. |
+| **Staging Area** | The area between working directory and repository where you prepare the next commit. Also called the "index". |
+| **Stash** | Temporarily save uncommitted changes without committing (`git stash`). |
+| **Submodule** | A Git repository embedded inside another repository at a specific commit. |
+| **Subtree** | An alternative to submodules — merges another repo's content into a subdirectory. |
