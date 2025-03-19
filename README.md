@@ -151,6 +151,56 @@ flowchart TD
 
 ---
 
+### ⚫ Phase E — Enterprise DevOps, Scaling & Capstone
+*Deploy industry branching models, open-source standards, Monorepos, GitOps pipelines, and the final Capstone.*
+
+| # | Module | Core Topics | Est. Time | Status |
+|---|--------|-------------|-----------|:------:|
+| 25 | [Branching Strategies & Git Flow](./25-Branching-Strategies-and-Git-Flow/README.md) | Git Flow, GitHub Flow, GitLab Flow, Trunk-Based Development Comparison | 3.0 hrs | ![Ready](https://img.shields.io/badge/-Ready-brightgreen) |
+| 26 | [Open-Source Contribution Guide](./26-Open-Source-Contribution-Guide/README.md) | Forking, Upstream Sync, Conventional Commits, DCO / CLA Sign-Offs | 3.0 hrs | ![Ready](https://img.shields.io/badge/-Ready-brightgreen) |
+| 27 | [Monorepos & Scaling Git](./27-Monorepos-and-Scaling-Git/README.md) | Monorepos vs Polyrepos, Git LFS, Sparse-Checkout, Partial Clones, Scalar | 3.0 hrs | ![Ready](https://img.shields.io/badge/-Ready-brightgreen) |
+| 28 | [Repository Best Practices](./28-Repository-Best-Practices/README.md) | README Standards, LICENSE Choice, CONTRIBUTING, SECURITY.md, Hygiene | 2.5 hrs | ![Ready](https://img.shields.io/badge/-Ready-brightgreen) |
+| 29 | [Git in Production — DevOps Integration](./29-Git-in-Production-DevOps-Integration/README.md) | GitOps Fundamentals (ArgoCD/Flux), Deployment Tags, Release Pipelines | 4.0 hrs | ![Ready](https://img.shields.io/badge/-Ready-brightgreen) |
+| 30 | [Capstone Project — Task Manager](./30-Capstone-Project/README.md) | End-to-End Enterprise Repository Build & Audit (100-Point Grading Rubric) | 8–12 hrs | ![Ready](https://img.shields.io/badge/-Ready-brightgreen) |
+
+---
+
+## 🧰 Reference Toolkit & Resources
+
+| Document | Description |
+|---|---|
+| [📋 **Master Cheat Sheet**](./CHEATSHEET.md) | Comprehensive command reference categorized from setup to advanced plumbing |
+| [📘 **A–Z Glossary**](./GLOSSARY.md) | Concise definitions of 60+ fundamental and enterprise Git/GitHub concepts |
+
+---
+
+## 🚀 Getting Started
+
+### 1. Clone the Coursework
+
+```bash
+git clone https://github.com/<your-username>/Git_Coursework.git
+cd Git_Coursework
+```
+
+### 2. Follow the Recommended Study Methodology
+
+```mermaid
+flowchart LR
+    A["1. Read Module Theory"] --> B["2. Run Every Command"]
+    B --> C["3. Solve Exercises"]
+    C --> D["4. Inspect Git Internals"]
+    D --> E["5. Proceed to Next Module"]
+```
+
+1. **Sequential Order**: Start with [Module 01](./01-Introduction-to-Version-Control/README.md) and progress sequentially. Each module assumes knowledge of preceding topics.
+2. **Hands-On Practice**: Do not simply read the documentation. Create a test repository on your local machine and execute every single command.
+3. **Inspect the Internals**: When exploring Phase C, use plumbing commands (`git cat-file -p`, `git ls-tree`) to verify object storage on your own filesystem.
+4. **Complete the Capstone**: Build the [Module 30 Capstone Project](./30-Capstone-Project/README.md) to showcase your complete Git & GitHub proficiency on your resume or portfolio.
+
+
+---
+
 ## 🧭 How to Use This Coursework
 
 1. Follow modules in order
