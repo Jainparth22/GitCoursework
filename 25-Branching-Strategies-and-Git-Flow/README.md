@@ -12,7 +12,42 @@
 
 ---
 
+## 1. Branching Models Compared
+
+> *[Visual Diagram: Architecture & Workflow]*
 
 ---
 
-> *Note: Walkthroughs and exercises currently being drafted.*
+## 2. Git Flow
+
+> *[Visual Diagram: Architecture & Workflow]*
+
+### Git Flow Branch Roles
+
+| Branch | Purpose | Lifetime |
+|--------|---------|----------|
+| `main` | Production code | Permanent |
+| `develop` | Integration branch | Permanent |
+| `feature/*` | New features | Temporary |
+| `release/*` | Release prep | Temporary |
+| `hotfix/*` | Emergency fixes | Temporary |
+
+---
+
+## 3. GitHub Flow (Simplified)
+
+> *[Visual Diagram: Architecture & Workflow]*
+
+**Rules:**
+1. `main` is always deployable
+2. Create feature branches from `main`
+3. Open PR when ready for review
+4. After review + CI, merge to `main`
+5. Deploy immediately after merge
+
+---
+
+
+---
+
+> *Note: Practical exercises and advanced topics currently being drafted.*
