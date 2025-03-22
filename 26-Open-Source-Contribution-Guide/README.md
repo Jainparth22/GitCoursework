@@ -66,7 +66,30 @@ git push origin main
 
 ---
 
+## 4. Keeping Your Fork in Sync
+
+> *[Visual Diagram: Architecture & Workflow]*
 
 ---
 
-> *Note: Practical exercises and advanced topics currently being drafted.*
+## 🏋️ Exercises
+
+1. Fork a public repo, clone it, and set up upstream remote
+2. Find an issue labeled `good first issue` and read the contribution guidelines
+3. Create a branch, make a documentation fix, and open a PR
+4. Sync your fork with upstream changes
+5. Create CONTRIBUTING.md and CODE_OF_CONDUCT.md for your own project
+
+---
+
+## 🔑 Key Takeaways
+
+1. Always **read CONTRIBUTING.md** before starting work
+2. Fork → Clone → Branch → Commit → Push → PR is the standard flow
+3. Keep your fork synced with `upstream` to avoid merge conflicts
+4. Start with `good first issue` labels for your first contributions
+5. Be patient and respectful — maintainers are often volunteers
+
+---
+
+**[← Module 25](../25-Branching-Strategies-and-Git-Flow/README.md)** | **[Module 27 →](../27-Monorepos-and-Scaling-Git/README.md)**
