@@ -78,3 +78,16 @@
 | **Stash** | Temporarily save uncommitted changes without committing (`git stash`). |
 | **Submodule** | A Git repository embedded inside another repository at a specific commit. |
 | **Subtree** | An alternative to submodules — merges another repo's content into a subdirectory. |
+| **Three-Way Merge** | A merge using the common ancestor (base), our version, and their version to resolve changes. |
+| **Tracking Branch** | A local branch linked to a remote branch (e.g., `main` tracks `origin/main`). |
+| **Tree** | A Git object representing a directory — maps filenames to blobs and sub-trees. |
+| **Trunk-Based Development** | Branching strategy where all developers commit to a single main branch with very short-lived branches. |
+| **Untracked** | A file that exists in the working directory but has never been added to Git. |
+| **Upstream** | The original repository that was forked. Typically added as `git remote add upstream <url>`. |
+| **Working Directory** | The actual files on disk that you edit. One of Git's three areas (working, staging, repository). |
+| **Workflow** | In GitHub Actions, an automated process defined in a YAML file triggered by events. |
+| **Worktree** | A linked working tree allowing you to check out multiple branches simultaneously (`git worktree`). |
+
+---
+
+**[← Back to Course](README.md)**
