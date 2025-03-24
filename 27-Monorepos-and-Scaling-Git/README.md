@@ -69,7 +69,44 @@ git clone --depth=1 URL
 
 ---
 
+## 4. Performance Optimization
+
+> *[Visual Diagram: Architecture & Workflow]*
+
+```bash
+# Enable background maintenance
+git maintenance start
+
+# Force garbage collection
+git gc --aggressive
+
+# Update commit-graph for faster log
+git commit-graph write --reachable
+
+# Check repo health
+git fsck
+git count-objects -v
+```
 
 ---
 
-> *Note: Practical exercises and advanced topics currently being drafted.*
+## 🏋️ Exercises
+
+1. Create a monorepo structure with 3 packages and shared config
+2. Use sparse checkout to only clone 1 package from a large repo
+3. Compare clone times: full vs blobless vs shallow
+4. Enable `git maintenance` and observe background optimization
+
+---
+
+## 🔑 Key Takeaways
+
+1. Monorepos centralize code but require tooling for scale
+2. **Sparse checkout** limits which directories are on disk
+3. **Partial clone** downloads object data on demand
+4. `git maintenance` automates background performance optimization
+5. Choose monorepo vs polyrepo based on team size and coupling
+
+---
+
+**[← Module 26](../26-Open-Source-Contribution-Guide/README.md)** | **[Module 28 →](../28-Repository-Best-Practices/README.md)**
