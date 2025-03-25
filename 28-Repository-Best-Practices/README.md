@@ -13,7 +13,42 @@
 
 ---
 
+## 1. Commit Message Standards
+
+### Conventional Commits
+
+> *[Visual Diagram: Architecture & Workflow]*
+
+```
+feat(auth): add JWT token refresh
+
+Implement automatic token refresh when the access token
+expires within 5 minutes. Uses refresh token from httpOnly
+cookie.
+
+BREAKING CHANGE: Login response now includes refresh_token field
+Closes #142
+```
+
+### Commit Type Decision
+
+> *[Visual Diagram: Architecture & Workflow]*
 
 ---
 
-> *Note: Walkthroughs and exercises currently being drafted.*
+## 2. Repository Structure
+
+> *[Visual Diagram: Architecture & Workflow]*
+
+---
+
+## 3. README Quality Checklist
+
+> *[Visual Diagram: Architecture & Workflow]*
+
+---
+
+
+---
+
+> *Note: Practical exercises and advanced topics currently being drafted.*
