@@ -268,3 +268,30 @@ gh repo view                      # View repo info
 ```bash
 # Git LFS
 git lfs install                   # Initialize LFS
+git lfs track "*.psd"             # Track file type
+git lfs ls-files                  # List LFS files
+
+# Submodules
+git submodule add <url> <path>    # Add submodule
+git submodule update --init       # Initialize submodules
+git submodule update --remote     # Update to latest
+git submodule foreach 'git pull'  # Pull all submodules
+```
+
+---
+
+## 💡 Useful Aliases
+
+```bash
+git config --global alias.s "status -s"
+git config --global alias.lg "log --oneline --graph --all"
+git config --global alias.co "checkout"
+git config --global alias.br "branch"
+git config --global alias.cm "commit -m"
+git config --global alias.last "log -1 HEAD"
+git config --global alias.unstage "restore --staged"
+```
+
+---
+
+**[← Back to Course](README.md)**
