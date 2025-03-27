@@ -64,7 +64,29 @@ jobs:
 
 ---
 
+## 4. Environment-Based Promotion
+
+> *[Visual Diagram: Architecture & Workflow]*
 
 ---
 
-> *Note: Practical exercises and advanced topics currently being drafted.*
+## 🏋️ Exercises
+
+1. Set up a tag-triggered deployment pipeline with GitHub Actions
+2. Configure `semantic-release` with Conventional Commits
+3. Implement a blue-green deployment strategy using Git branches
+4. Create a GitOps-style repo where merging to `main` auto-deploys
+
+---
+
+## 🔑 Key Takeaways
+
+1. **GitOps** makes Git the single source of truth for infrastructure
+2. Tag-based deployments provide clear versioning and easy rollback
+3. `semantic-release` automates version bumps based on commit messages
+4. Environment promotion (dev → staging → prod) uses branches and tags
+5. Every deployment should be traceable to a Git commit/tag
+
+---
+
+**[← Module 28](../28-Repository-Best-Practices/README.md)** | **[Module 30 →](../30-Capstone-Project/README.md)**
