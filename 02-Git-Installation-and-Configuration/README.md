@@ -18,7 +18,27 @@
 
 ### How the Installation Process Works
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+flowchart TD
+    A[Start] --> B{Which OS?}
+    B -->|Windows| C[Download Git for Windows]
+    B -->|macOS| D[Xcode CLI Tools or Homebrew]
+    B -->|Linux| E[Package Manager]
+    
+    C --> C1[Includes Git Bash, GUI, Shell Integration]
+    D --> D1[Includes Git + developer tools]
+    E --> E1[Lightweight Git install]
+    
+    C1 --> F[Verify: git --version]
+    D1 --> F
+    E1 --> F
+    F --> G{Version shown?}
+    G -->|Yes| H[✅ Git Installed]
+    G -->|No| I[❌ Check PATH / Reinstall]
+    
+    style H fill:#51cf66
+    style I fill:#ff6b6b
+```
 
 ### Windows
 
@@ -27,7 +47,19 @@
 1. Download from [https://git-scm.com/download/win](https://git-scm.com/download/win)
 2. Run the installer with these recommended settings:
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+flowchart TD
+    A[Run Installer] --> B["Component Selection<br/>✅ Git Bash Here<br/>✅ Git GUI Here<br/>✅ Git LFS"]
+    B --> C["PATH Selection<br/>✅ Git from command line<br/>AND 3rd-party software"]
+    C --> D["SSH Selection<br/>✅ Use bundled OpenSSH"]
+    D --> E["HTTPS Backend<br/>✅ Use OpenSSL library"]
+    E --> F["Line Endings<br/>✅ Checkout Windows-style,<br/>commit Unix-style"]
+    F --> G["Terminal Emulator<br/>✅ Use MinTTY"]
+    G --> H["Default Branch<br/>✅ Override: main"]
+    H --> I[Install Complete]
+    
+    style I fill:#51cf66
+```
 
 3. Verify:
 ```bash
@@ -80,11 +112,48 @@ sudo pacman -S git
 
 Git stores configuration at **three levels**, each overriding the previous:
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+graph TB
+    subgraph "Configuration Hierarchy (highest priority on top)"
+        LOCAL["🟢 LOCAL<br/>.git/config<br/>This repository only"]
+        GLOBAL["🟡 GLOBAL<br/>~/.gitconfig<br/>Your user account"]
+        SYSTEM["🔴 SYSTEM<br/>/etc/gitconfig<br/>All users on machine"]
+    end
+    
+    LOCAL -->|overrides| GLOBAL
+    GLOBAL -->|overrides| SYSTEM
+    
+    style LOCAL fill:#51cf66,stroke:#333
+    style GLOBAL fill:#ffd43b,stroke:#333
+    style SYSTEM fill:#ff6b6b,stroke:#333
+```
 
 ### How Git Resolves Configuration
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+sequenceDiagram
+    participant Git as Git Command
+    participant L as .git/config (Local)
+    participant G as ~/.gitconfig (Global)
+    participant S as /etc/gitconfig (System)
+    
+    Git->>L: Check local config first
+    alt Found in local
+        L-->>Git: Return local value ✅
+    else Not found
+        Git->>G: Check global config
+        alt Found in global
+            G-->>Git: Return global value ✅
+        else Not found
+            Git->>S: Check system config
+            alt Found in system
+                S-->>Git: Return system value ✅
+            else Not found
+                S-->>Git: Use default value
+            end
+        end
+    end
+```
 
 ### Viewing Configuration
 
@@ -122,7 +191,29 @@ git config user.email
 
 ## 3. Essential Configuration — First-Time Setup
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+flowchart TD
+    A["First Git Install"] --> B["Set Identity"]
+    B --> C["git config --global user.name"]
+    B --> D["git config --global user.email"]
+    
+    C --> E["Set Editor"]
+    D --> E
+    E --> F["git config --global core.editor"]
+    
+    F --> G["Set Default Branch"]
+    G --> H["git config --global init.defaultBranch main"]
+    
+    H --> I["Set Line Endings"]
+    I --> J{OS?}
+    J -->|Windows| K["autocrlf = true"]
+    J -->|macOS/Linux| L["autocrlf = input"]
+    
+    K --> M["Ready to Use Git ✅"]
+    L --> M
+    
+    style M fill:#51cf66
+```
 
 ### Identity (Required)
 
@@ -168,7 +259,26 @@ git config --global color.ui auto
 
 Different OS use different characters for line breaks. This causes problems in cross-platform teams.
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+flowchart LR
+    subgraph "Operating Systems"
+        W["Windows<br/>CRLF: \\r\\n<br/>(2 bytes)"]
+        M["macOS / Linux<br/>LF: \\n<br/>(1 byte)"]
+    end
+    
+    subgraph "Git Repository"
+        R["Always stores LF \\n<br/>(normalized)"]
+    end
+    
+    W -->|"commit: CRLF → LF"| R
+    R -->|"checkout: LF → CRLF"| W
+    M -->|"commit: LF → LF"| R
+    R -->|"checkout: LF → LF"| M
+    
+    style R fill:#51cf66
+    style W fill:#74c0fc
+    style M fill:#74c0fc
+```
 
 ### Configuration
 
@@ -182,7 +292,29 @@ git config --global core.autocrlf input
 
 ### How `core.autocrlf` Works Internally
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+flowchart TD
+    subgraph "core.autocrlf = true (Windows)"
+        W1["Working Directory<br/>CRLF (\\r\\n)"]
+        W2["Repository<br/>LF (\\n)"]
+        W1 -->|"git add<br/>CRLF → LF"| W2
+        W2 -->|"git checkout<br/>LF → CRLF"| W1
+    end
+    
+    subgraph "core.autocrlf = input (macOS/Linux)"
+        L1["Working Directory<br/>LF (\\n)"]
+        L2["Repository<br/>LF (\\n)"]
+        L1 -->|"git add<br/>CRLF → LF (if found)"| L2
+        L2 -->|"git checkout<br/>No conversion"| L1
+    end
+    
+    subgraph "core.autocrlf = false"
+        F1["Working Directory<br/>Whatever"]
+        F2["Repository<br/>Whatever"]
+        F1 -->|"No conversion"| F2
+        F2 -->|"No conversion"| F1
+    end
+```
 
 ---
 
@@ -192,7 +324,23 @@ SSH keys provide **secure, password-less authentication** with GitHub.
 
 ### How SSH Authentication Works
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+sequenceDiagram
+    participant You as Your Computer
+    participant GH as GitHub Server
+    
+    Note over You: Has Private Key 🔑<br/>(~/.ssh/id_ed25519)
+    Note over GH: Has Public Key 🔓<br/>(in your account settings)
+    
+    You->>GH: 1. Initiate connection (git push)
+    GH->>You: 2. Send challenge (random data)
+    You->>You: 3. Sign challenge with Private Key 🔑
+    You->>GH: 4. Send signed response
+    GH->>GH: 5. Verify with Public Key 🔓
+    GH-->>You: 6. ✅ Authentication successful
+    
+    Note over You,GH: Private key NEVER leaves your machine
+```
 
 ### Generate SSH Key
 
@@ -207,7 +355,19 @@ ssh-keygen -t ed25519 -C "your.email@example.com"
 
 ### Key Files Explained
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+graph LR
+    subgraph "~/.ssh/ directory"
+        PRIV["id_ed25519<br/>🔑 PRIVATE KEY<br/>(NEVER share this!)"]
+        PUB["id_ed25519.pub<br/>🔓 PUBLIC KEY<br/>(Add to GitHub)"]
+    end
+    
+    PUB -->|"Copy to"| GH["GitHub Settings →<br/>SSH and GPG Keys →<br/>New SSH Key"]
+    
+    style PRIV fill:#ff6b6b,stroke:#333
+    style PUB fill:#51cf66,stroke:#333
+    style GH fill:#74c0fc,stroke:#333
+```
 
 ### Add Key to SSH Agent
 
@@ -269,7 +429,14 @@ git config --global credential.helper osxkeychain
 
 Prove that commits are genuinely from you (shows "Verified" badge on GitHub):
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+flowchart LR
+    C["Your Commit"] -->|"Sign with GPG Key"| SC["Signed Commit"]
+    SC -->|"Push to GitHub"| GH["GitHub verifies<br/>signature"]
+    GH --> V["✅ Verified Badge"]
+    
+    style V fill:#51cf66
+```
 
 ```bash
 # Generate GPG key
@@ -304,7 +471,16 @@ git config --global alias.amend "commit --amend --no-edit"
 
 ### How Aliases Work
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+flowchart LR
+    A["git lg"] -->|"Git reads alias"| B["git log --oneline<br/>--graph --all --decorate"]
+    C["git s"] -->|"Git reads alias"| D["git status -s"]
+    
+    style A fill:#74c0fc
+    style C fill:#74c0fc
+    style B fill:#51cf66
+    style D fill:#51cf66
+```
 
 ---
 

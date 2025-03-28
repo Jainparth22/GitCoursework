@@ -17,7 +17,22 @@
 
 ### What Happens Internally
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+sequenceDiagram
+    participant You as Developer
+    participant FS as File System
+    participant Git as Git Engine
+    
+    You->>FS: mkdir my-project && cd my-project
+    Note over FS: Empty directory created
+    
+    You->>Git: git init
+    Git->>FS: Create .git/ directory structure
+    Note over FS: .git/objects/ → Object database<br/>.git/refs/ → Branch pointers<br/>.git/HEAD → Current branch<br/>.git/config → Local config
+    
+    Git-->>You: Initialized empty Git repository ✅
+    Note over You: Directory is now a Git repo!
+```
 
 ```bash
 # Create a new project
@@ -35,7 +50,30 @@ git init
 
 When you run `git init`, Git creates this structure:
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+graph TD
+    ROOT[".git/"] --> HEAD["HEAD<br/>Points to current branch<br/>(ref: refs/heads/main)"]
+    ROOT --> CONFIG["config<br/>Local repository config"]
+    ROOT --> DESC["description<br/>GitWeb description"]
+    ROOT --> OBJECTS["objects/<br/>Object database<br/>(blobs, trees, commits)"]
+    ROOT --> REFS["refs/<br/>References (pointers)"]
+    ROOT --> HOOKS["hooks/<br/>Script hooks"]
+    ROOT --> INDEX["index<br/>Staging area file"]
+    ROOT --> INFO["info/<br/>Auxiliary info"]
+    
+    OBJECTS --> OBJ_INFO["info/"]
+    OBJECTS --> OBJ_PACK["pack/<br/>Packfiles"]
+    
+    REFS --> HEADS["heads/<br/>Branch pointers<br/>(main, feature/x)"]
+    REFS --> TAGS["tags/<br/>Tag pointers<br/>(v1.0, v2.0)"]
+    REFS --> REMOTES["remotes/<br/>Remote branch pointers<br/>(origin/main)"]
+    
+    style ROOT fill:#ffd43b
+    style HEAD fill:#ff922b
+    style OBJECTS fill:#51cf66
+    style REFS fill:#74c0fc
+    style INDEX fill:#e599f7
+```
 
 ### What Each Component Does
 
@@ -56,7 +94,27 @@ When you run `git init`, Git creates this structure:
 
 ### How Clone Works Internally
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+sequenceDiagram
+    participant You as Developer
+    participant Git as Git Client
+    participant Remote as GitHub Server
+    
+    You->>Git: git clone https://github.com/user/repo.git
+    
+    Git->>Remote: 1. Request repository info
+    Remote-->>Git: 2. Send packfile with all objects
+    
+    Git->>Git: 3. Create directory "repo/"
+    Git->>Git: 4. Create .git/ with all objects
+    Git->>Git: 5. Set up "origin" remote
+    Git->>Git: 6. Create local "main" branch
+    Git->>Git: 7. Checkout files to working directory
+    
+    Git-->>You: Repository cloned ✅
+    
+    Note over You: You now have:<br/>- Full history<br/>- All branches (as remote refs)<br/>- Working directory with latest files
+```
 
 ```bash
 # Clone via HTTPS
@@ -74,7 +132,17 @@ git clone --depth 1 git@github.com:user/repo.git
 
 ### What `git clone` Actually Does (Equivalent Commands)
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+flowchart TD
+    CLONE["git clone URL"] --> A["mkdir repo && cd repo"]
+    A --> B["git init"]
+    B --> C["git remote add origin URL"]
+    C --> D["git fetch origin"]
+    D --> E["git checkout main"]
+    
+    style CLONE fill:#74c0fc
+    style E fill:#51cf66
+```
 
 ---
 
@@ -82,7 +150,23 @@ git clone --depth 1 git@github.com:user/repo.git
 
 Every file in a Git repository is in one of these states:
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+stateDiagram-v2
+    [*] --> Untracked: Create new file
+    
+    Untracked --> Staged: git add
+    Staged --> Unmodified: git commit
+    Unmodified --> Modified: Edit file
+    Modified --> Staged: git add
+    Unmodified --> Untracked: git rm
+    Modified --> Unmodified: git restore
+    Staged --> Modified: Edit after staging
+    
+    state "📄 Untracked" as Untracked
+    state "📋 Staged" as Staged  
+    state "✅ Unmodified (Committed)" as Unmodified
+    state "✏️ Modified" as Modified
+```
 
 ### Detailed State Definitions
 
@@ -95,7 +179,33 @@ Every file in a Git repository is in one of these states:
 
 ### How File State Transitions Work
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+flowchart LR
+    subgraph "Working Directory"
+        NEW["📄 New File<br/>(Untracked)"]
+        MOD["✏️ Modified File"]
+    end
+    
+    subgraph "Staging Area"
+        STAGED["📋 Staged Changes"]
+    end
+    
+    subgraph "Repository"
+        COMMITTED["✅ Committed Snapshot"]
+    end
+    
+    NEW -->|"git add"| STAGED
+    MOD -->|"git add"| STAGED
+    STAGED -->|"git commit"| COMMITTED
+    COMMITTED -->|"Edit file"| MOD
+    STAGED -->|"git restore --staged"| MOD
+    MOD -->|"git restore"| COMMITTED
+    
+    style NEW fill:#ff6b6b
+    style MOD fill:#ffd43b
+    style STAGED fill:#74c0fc
+    style COMMITTED fill:#51cf66
+```
 
 ---
 
@@ -103,11 +213,50 @@ Every file in a Git repository is in one of these states:
 
 ### Why Ignore Files?
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+graph TB
+    subgraph "Should Track ✅"
+        A["Source code (.js, .py)"]
+        B["Config files"]
+        C["Documentation"]
+        D["Test files"]
+    end
+    
+    subgraph "Should Ignore ❌"
+        E["node_modules/"]
+        F["Build output (dist/)"]
+        G["Secrets (.env)"]
+        H["OS files (.DS_Store)"]
+        I["IDE files (.vscode/)"]
+        J["Compiled files (.pyc)"]
+    end
+    
+    style A fill:#51cf66
+    style B fill:#51cf66
+    style C fill:#51cf66
+    style D fill:#51cf66
+    style E fill:#ff6b6b
+    style F fill:#ff6b6b
+    style G fill:#ff6b6b
+    style H fill:#ff6b6b
+    style I fill:#ff6b6b
+    style J fill:#ff6b6b
+```
 
 ### How `.gitignore` Works Internally
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+flowchart TD
+    A["git add / git status"] --> B{"File matches<br/>.gitignore pattern?"}
+    B -->|"Yes"| C["File is IGNORED<br/>Not tracked, not shown"]
+    B -->|"No"| D{"Already tracked<br/>by Git?"}
+    D -->|"Yes"| E["File IS tracked<br/>(ignore doesn't apply!)"]
+    D -->|"No"| F["File shown as<br/>Untracked"]
+    
+    style C fill:#ff6b6b
+    style E fill:#ffd43b
+    style F fill:#74c0fc
+```
 
 > **Important**: `.gitignore` only works for **untracked** files. If a file is already tracked, you must `git rm --cached file` first.
 
@@ -151,7 +300,18 @@ docs/**/*.pdf
 
 ### Gitignore Processing Order
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+flowchart TD
+    A["Check .gitignore patterns"] --> B["Process top to bottom"]
+    B --> C["Later patterns override earlier ones"]
+    C --> D{"Pattern starts with !"}
+    D -->|"Yes"| E["NEGATE: re-include the file"]
+    D -->|"No"| F["IGNORE: exclude the file"]
+    
+    G["Multiple .gitignore files"] --> H["repo root/.gitignore"]
+    H --> I["subdirectory/.gitignore"]
+    I --> J["Later/deeper files take precedence"]
+```
 
 ### Common `.gitignore` Templates
 
@@ -196,7 +356,26 @@ echo "*.swp" >> ~/.gitignore_global
 
 ## 6. Bare Repositories
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+graph LR
+    subgraph "Regular Repository"
+        RR_WD["Working Directory<br/>(editable files)"]
+        RR_GIT[".git/<br/>(history)"]
+    end
+    
+    subgraph "Bare Repository"
+        BR_GIT["Repository contents<br/>directly (no working dir)"]
+    end
+    
+    RR_WD -->|"Used by"| DEV["Developers"]
+    BR_GIT -->|"Used by"| SRV["Servers<br/>(GitHub, GitLab)"]
+    
+    style RR_WD fill:#51cf66
+    style RR_GIT fill:#74c0fc
+    style BR_GIT fill:#ffd43b
+    style DEV fill:#e599f7
+    style SRV fill:#e599f7
+```
 
 ```bash
 # Create bare repo (server-side)

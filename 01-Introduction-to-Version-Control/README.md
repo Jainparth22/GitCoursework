@@ -48,7 +48,15 @@ project/
 
 The simplest form — a local database tracking file changes.
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+graph LR
+    A[Working Copy] -->|checkout| B[(Local VCS Database)]
+    B -->|Version 1| C[File v1]
+    B -->|Version 2| D[File v2]
+    B -->|Version 3| E[File v3]
+    
+    style B fill:#f9f,stroke:#333
+```
 
 **Example**: RCS (Revision Control System) — stores patch sets on disk.
 
@@ -58,7 +66,30 @@ The simplest form — a local database tracking file changes.
 
 A single central server holds all versioned files. Clients check out files from that central place.
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+graph TB
+    subgraph Central Server
+        CS[(Central Repository)]
+    end
+    
+    subgraph "Developer A"
+        DA[Working Copy A]
+    end
+    
+    subgraph "Developer B"
+        DB[Working Copy B]
+    end
+    
+    subgraph "Developer C"
+        DC[Working Copy C]
+    end
+    
+    DA <-->|checkout / commit| CS
+    DB <-->|checkout / commit| CS
+    DC <-->|checkout / commit| CS
+    
+    style CS fill:#ff6b6b,stroke:#333
+```
 
 **Examples**: SVN (Subversion), CVS, Perforce
 
@@ -75,7 +106,40 @@ A single central server holds all versioned files. Clients check out files from 
 
 Every developer has a **full copy** of the repository including its complete history.
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+graph TB
+    subgraph "Remote Server (GitHub)"
+        RS[(Complete Repository)]
+    end
+    
+    subgraph "Developer A"
+        RA[(Full Repository Copy)]
+        WA[Working Directory]
+        WA --- RA
+    end
+    
+    subgraph "Developer B"
+        RB[(Full Repository Copy)]
+        WB[Working Directory]
+        WB --- RB
+    end
+    
+    subgraph "Developer C"
+        RC[(Full Repository Copy)]
+        WC[Working Directory]
+        WC --- RC
+    end
+    
+    RA <-->|push / pull| RS
+    RB <-->|push / pull| RS
+    RC <-->|push / pull| RS
+    RA <-.->|peer-to-peer| RB
+    
+    style RS fill:#51cf66,stroke:#333
+    style RA fill:#74c0fc,stroke:#333
+    style RB fill:#74c0fc,stroke:#333
+    style RC fill:#74c0fc,stroke:#333
+```
 
 **Examples**: Git, Mercurial, Bazaar
 
@@ -89,7 +153,28 @@ Every developer has a **full copy** of the repository including its complete his
 
 ## 3. CVCS vs DVCS — Deep Comparison
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+graph LR
+    subgraph CVCS
+        direction TB
+        CC[(Central Server)] 
+        CA[Dev A] -->|needs network| CC
+        CB[Dev B] -->|needs network| CC
+    end
+    
+    subgraph DVCS
+        direction TB
+        DC[(Remote)] 
+        DA2[(Dev A Full Repo)] <-->|push/pull| DC
+        DB2[(Dev B Full Repo)] <-->|push/pull| DC
+        DA2 <-.-> DB2
+    end
+    
+    style CC fill:#ff6b6b
+    style DC fill:#51cf66
+    style DA2 fill:#74c0fc
+    style DB2 fill:#74c0fc
+```
 
 | Feature | CVCS (SVN) | DVCS (Git) |
 |---------|-----------|-----------|
@@ -106,7 +191,18 @@ Every developer has a **full copy** of the repository including its complete his
 
 ### Brief History
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+timeline
+    title Git History
+    2002 : Linux kernel uses BitKeeper (proprietary DVCS)
+    2005 : BitKeeper revokes free license
+    2005 : Linus Torvalds creates Git in ~10 days
+    2005 : Git used for Linux kernel development
+    2008 : GitHub launches
+    2014 : Git becomes dominant VCS worldwide
+    2018 : Microsoft acquires GitHub
+    2024 : Git used by 90%+ of developers
+```
 
 ### Git's Design Goals
 
@@ -126,7 +222,19 @@ Linus Torvalds designed Git with these priorities:
 
 Most VCS store data as a **list of changes** (deltas) to each file:
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+graph LR
+    subgraph "Delta-Based Storage (SVN)"
+        V1[Version 1] -->|Δ1| V2[Version 2]
+        V2 -->|Δ2| V3[Version 3]
+        V3 -->|Δ3| V4[Version 4]
+    end
+    
+    style V1 fill:#ffd43b
+    style V2 fill:#ffd43b
+    style V3 fill:#ffd43b
+    style V4 fill:#ffd43b
+```
 
 ```
 File A:  [v1] → [Δ1] → [Δ2] → [Δ3]    ← Store changes
@@ -140,7 +248,21 @@ To get the current version, apply all deltas from the beginning. **Slow for larg
 
 Git stores a **complete snapshot** of all files at each commit:
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+graph LR
+    subgraph "Snapshot-Based Storage (Git)"
+        S1["Snapshot 1<br/>A1, B1, C1"]
+        S2["Snapshot 2<br/>A2, B1, C1"]
+        S3["Snapshot 3<br/>A2, B1, C2"]
+        S4["Snapshot 4<br/>A3, B1, C2"]
+        S1 --> S2 --> S3 --> S4
+    end
+    
+    style S1 fill:#51cf66
+    style S2 fill:#51cf66
+    style S3 fill:#51cf66
+    style S4 fill:#51cf66
+```
 
 ```
                   Commit 1    Commit 2    Commit 3    Commit 4
@@ -157,7 +279,19 @@ File C:           [C1]        [C1] ←link  [C2]        [C2] ←link
 
 ### Why Snapshots Are Better
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+flowchart LR
+    subgraph "Getting Version 4"
+        direction TB
+        D["Delta-Based<br/>(SVN)"] --> D1["Apply Δ1"] --> D2["Apply Δ2"] --> D3["Apply Δ3"] --> DR["Result"]
+        S["Snapshot-Based<br/>(Git)"] --> SR["Just read Snapshot 4"]
+    end
+    
+    style D fill:#ff6b6b
+    style S fill:#51cf66
+    style DR fill:#ffd43b
+    style SR fill:#ffd43b
+```
 
 | Aspect | Delta (SVN) | Snapshot (Git) |
 |--------|-------------|---------------|
@@ -172,11 +306,40 @@ File C:           [C1]        [C1] ←link  [C2]        [C2] ←link
 
 This is the **most fundamental concept** in Git. Everything revolves around these three areas.
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+graph LR
+    WD["🗂️ Working Directory<br/>(Your actual files)"] 
+    SA["📋 Staging Area<br/>(Index / Cache)"]
+    R["📦 Repository<br/>(.git directory)"]
+    
+    WD -->|"git add"| SA
+    SA -->|"git commit"| R
+    R -->|"git checkout"| WD
+    
+    style WD fill:#ff922b,stroke:#333,color:#000
+    style SA fill:#ffd43b,stroke:#333,color:#000
+    style R fill:#51cf66,stroke:#333,color:#000
+```
 
 ### How It Works — Step by Step
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+sequenceDiagram
+    participant WD as Working Directory
+    participant SA as Staging Area (Index)
+    participant R as Repository (.git)
+    
+    Note over WD: You edit files here
+    
+    WD->>SA: git add file.txt
+    Note over SA: File is "staged"<br/>Ready for commit
+    
+    SA->>R: git commit -m "message"
+    Note over R: Snapshot saved<br/>permanently in history
+    
+    R->>WD: git checkout <branch>
+    Note over WD: Files updated to<br/>match that commit
+```
 
 ### Detailed Explanation
 
@@ -200,7 +363,22 @@ This is the **most fundamental concept** in Git. Everything revolves around thes
 
 ### The Complete File Lifecycle
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+stateDiagram-v2
+    [*] --> Untracked: New file created
+    Untracked --> Staged: git add
+    Staged --> Committed: git commit
+    Committed --> Modified: Edit file
+    Modified --> Staged: git add
+    Staged --> Modified: Edit after staging
+    Committed --> Untracked: git rm
+    Modified --> Committed: git checkout -- file
+    
+    state "Untracked" as Untracked
+    state "Staged (Index)" as Staged
+    state "Committed (Unmodified)" as Committed
+    state "Modified" as Modified
+```
 
 ---
 
@@ -208,7 +386,30 @@ This is the **most fundamental concept** in Git. Everything revolves around thes
 
 A critical distinction that many beginners confuse:
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+graph TB
+    subgraph Git["GIT (Tool)"]
+        G1[Version Control Software]
+        G2[Runs locally on your machine]
+        G3[Command-line tool]
+        G4[Tracks file history]
+        G5[Free & open-source]
+    end
+    
+    subgraph GitHub["GITHUB (Platform)"]
+        GH1[Cloud hosting for Git repos]
+        GH2[Web-based interface]
+        GH3[Collaboration features]
+        GH4[Issues, PRs, Actions]
+        GH5[Owned by Microsoft]
+    end
+    
+    Git -->|"pushes code to"| GitHub
+    GitHub -->|"pulls code from"| Git
+    
+    style Git fill:#f03e3e,stroke:#333,color:#fff
+    style GitHub fill:#1c7ed6,stroke:#333,color:#fff
+```
 
 | Aspect | Git | GitHub |
 |--------|-----|--------|
@@ -225,7 +426,18 @@ A critical distinction that many beginners confuse:
 
 Every piece of data in Git is checksummed with **SHA-1** before it's stored:
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+flowchart LR
+    Content["File Content:<br/>'Hello World'"] 
+    --> Hash["SHA-1 Hash Function"]
+    --> SHA["557db03de997c86a<br/>4a028e1ebd3a1ceb<br/>225be238"]
+    --> Store["Stored in<br/>.git/objects/55/7db03..."]
+    
+    style Content fill:#74c0fc
+    style Hash fill:#ffd43b
+    style SHA fill:#ff922b
+    style Store fill:#51cf66
+```
 
 - The hash is a **40-character hexadecimal** string
 - **Same content always produces the same hash**
