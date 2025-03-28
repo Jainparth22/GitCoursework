@@ -18,21 +18,87 @@
 
 A remote is a **reference to another copy** of your repository, usually hosted on a server.
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+graph TB
+    subgraph "Your Machine"
+        LOCAL[(Local Repository<br/>Full history)]
+        WD[Working Directory]
+        WD --- LOCAL
+    end
+    
+    subgraph "GitHub Server"
+        REMOTE[(Remote Repository<br/>Full history)]
+    end
+    
+    LOCAL <-->|"push / pull / fetch"| REMOTE
+    
+    style LOCAL fill:#74c0fc,stroke:#333
+    style REMOTE fill:#51cf66,stroke:#333
+```
 
 ### How Remotes Are Stored
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+graph TD
+    subgraph ".git/config"
+        RC["[remote &quot;origin&quot;]<br/>url = git@github.com:user/repo.git<br/>fetch = +refs/heads/*:refs/remotes/origin/*"]
+    end
+    
+    subgraph ".git/refs/remotes/origin/"
+        RM["main → commit SHA<br/>develop → commit SHA<br/>feature/x → commit SHA"]
+    end
+    
+    RC -->|"defines"| RM
+    
+    style RC fill:#ffd43b
+    style RM fill:#74c0fc
+```
 
 ---
 
 ## 2. Remote Protocols — How Data Travels
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+flowchart TD
+    A["Connecting to Remote"] --> B{Protocol?}
+    B -->|HTTPS| C["https://github.com/user/repo.git"]
+    B -->|SSH| D["git@github.com:user/repo.git"]
+    
+    C --> C1["Authentication:<br/>Username + Token/Password"]
+    C --> C2["Port: 443"]
+    C --> C3["Works through firewalls ✅"]
+    C --> C4["Slower for frequent ops"]
+    
+    D --> D1["Authentication:<br/>SSH Key Pair 🔑"]
+    D --> D2["Port: 22"]
+    D --> D3["May be blocked by firewalls ⚠️"]
+    D --> D4["Faster, no repeated auth ✅"]
+    
+    style C fill:#74c0fc
+    style D fill:#51cf66
+```
 
 ### How SSH vs HTTPS Authentication Differs
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+sequenceDiagram
+    participant Dev as Developer
+    participant Git as Git Client
+    participant GH as GitHub
+    
+    Note over Dev,GH: HTTPS Authentication
+    Dev->>Git: git push (HTTPS)
+    Git->>GH: Request + username + token
+    GH-->>Git: Verified ✅ or Denied ❌
+    
+    Note over Dev,GH: SSH Authentication
+    Dev->>Git: git push (SSH)
+    Git->>GH: SSH handshake with public key
+    GH->>GH: Verify against stored public keys
+    GH-->>Git: Verified ✅ or Denied ❌
+    
+    Note over Dev: SSH: No credentials asked each time
+```
 
 ---
 
@@ -63,7 +129,26 @@ git remote show origin
 
 ### Multiple Remotes — Fork Workflow
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+graph TB
+    subgraph "GitHub"
+        UPSTREAM[(upstream<br/>Original Repo)]
+        ORIGIN[(origin<br/>Your Fork)]
+    end
+    
+    subgraph "Your Machine"
+        LOCAL[(Local Clone)]
+    end
+    
+    LOCAL -->|"git push origin"| ORIGIN
+    LOCAL -->|"git fetch upstream"| UPSTREAM
+    ORIGIN -->|"Pull Request"| UPSTREAM
+    UPSTREAM -.->|"Fork"| ORIGIN
+    
+    style UPSTREAM fill:#ff922b,stroke:#333
+    style ORIGIN fill:#51cf66,stroke:#333
+    style LOCAL fill:#74c0fc,stroke:#333
+```
 
 ---
 
@@ -71,7 +156,24 @@ git remote show origin
 
 Remote tracking branches are **read-only local references** to the state of branches on the remote:
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+graph RL
+    subgraph "Local Repository"
+        MAIN["main<br/>(local branch)"] -.-> C4["C4 (your work)"]
+        C4 --> C3
+        OM["origin/main<br/>(remote tracking)"] -.-> C3["C3"]
+        C3 --> C2["C2"] --> C1["C1"]
+    end
+    
+    subgraph "Remote (origin)"
+        RM["main"] -.-> RC3["C3"]
+        RC3 --> RC2["C2"] --> RC1["C1"]
+    end
+    
+    style MAIN fill:#51cf66
+    style OM fill:#ff922b
+    style RM fill:#51cf66
+```
 
 ```bash
 # View remote tracking branches
@@ -94,7 +196,19 @@ git branch -vv
 
 ### Via GitHub Web UI
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+flowchart TD
+    A["github.com → New Repository"] --> B["Fill in:<br/>Name, Description, Visibility"]
+    B --> C{"Initialize with README?"}
+    C -->|"Yes"| D["Creates repo with initial commit<br/>Clone to work locally"]
+    C -->|"No"| E["Empty repo<br/>Push from existing local repo"]
+    
+    D --> F["git clone URL"]
+    E --> G["git remote add origin URL<br/>git push -u origin main"]
+    
+    style D fill:#51cf66
+    style E fill:#74c0fc
+```
 
 ### Connecting Local Repo to GitHub
 
@@ -111,13 +225,39 @@ git push -u origin main
 
 ### How `git push -u` Works Internally
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+sequenceDiagram
+    participant Local as Local Git
+    participant Config as .git/config
+    participant Remote as GitHub
+    
+    Local->>Remote: Push commits to origin/main
+    Remote-->>Local: Received ✅
+    
+    Local->>Config: Set tracking info:<br/>[branch "main"]<br/>remote = origin<br/>merge = refs/heads/main
+    
+    Note over Local: Now "git push" and "git pull"<br/>automatically know where to go
+```
 
 ---
 
 ## 6. Forking — How It Works
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+flowchart TD
+    A["Original Repo<br/>github.com/original/project"] -->|"Fork (GitHub copy)"| B["Your Fork<br/>github.com/you/project"]
+    B -->|"git clone"| C["Local Clone"]
+    C -->|"git remote add upstream"| A
+    
+    C -->|"Make changes<br/>git push origin"| B
+    B -->|"Pull Request"| A
+    
+    A -->|"git fetch upstream"| C
+    
+    style A fill:#ff922b,stroke:#333
+    style B fill:#51cf66,stroke:#333
+    style C fill:#74c0fc,stroke:#333
+```
 
 ### Fork vs Clone
 

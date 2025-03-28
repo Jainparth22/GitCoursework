@@ -17,17 +17,61 @@
 
 Tags are **permanent pointers** to specific commits. Unlike branches, they **don't move**.
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+graph RL
+    C1["C1"] 
+    C2["C2"] --> C1
+    C3["C3"] --> C2
+    C4["C4"] --> C3
+    C5["C5"] --> C4
+    
+    MAIN["main<br/>(moves with commits)"] -.->|"pointer moves →"| C5
+    V1["v1.0.0<br/>(tag — stays put!)"] -.-> C2
+    V2["v2.0.0<br/>(tag — stays put!)"] -.-> C4
+    
+    style MAIN fill:#51cf66
+    style V1 fill:#ff922b
+    style V2 fill:#ff922b
+```
 
 ### How Tags Are Stored
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+graph TD
+    subgraph ".git/refs/tags/"
+        LT["v1.0.0 (lightweight)<br/>Contains: commit SHA directly"]
+        AT["v2.0.0 (annotated)<br/>Contains: tag object SHA"]
+    end
+    
+    subgraph ".git/objects/"
+        TAG_OBJ["Tag Object<br/>- Commit SHA<br/>- Tagger name/email<br/>- Date<br/>- Message<br/>- Optional GPG signature"]
+    end
+    
+    LT -->|"points to"| COMMIT1["Commit"]
+    AT -->|"points to"| TAG_OBJ
+    TAG_OBJ -->|"points to"| COMMIT2["Commit"]
+    
+    style LT fill:#ffd43b
+    style AT fill:#51cf66
+    style TAG_OBJ fill:#74c0fc
+```
 
 ---
 
 ## 2. Lightweight vs Annotated Tags
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+flowchart TD
+    A["Creating a Tag"] --> B{Which type?}
+    B -->|"Lightweight"| C["Just a pointer<br/>(like a branch that never moves)"]
+    B -->|"Annotated (Recommended)"| D["Full Git object with:<br/>• Author<br/>• Date<br/>• Message<br/>• Optional GPG signature"]
+    
+    C --> E["git tag v1.0.0"]
+    D --> F["git tag -a v1.0.0 -m 'Release 1.0'"]
+    
+    style C fill:#ffd43b
+    style D fill:#51cf66
+```
 
 | Feature | Lightweight | Annotated |
 |---------|------------|-----------|
@@ -72,11 +116,33 @@ git push origin --delete v1.0.0
 
 ## 3. Semantic Versioning (SemVer)
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+graph TD
+    VER["v2.4.1"] --> MAJOR["2 = MAJOR<br/>Breaking changes<br/>Incompatible API changes"]
+    VER --> MINOR["4 = MINOR<br/>New features<br/>Backward compatible"]
+    VER --> PATCH["1 = PATCH<br/>Bug fixes<br/>Backward compatible"]
+    
+    style MAJOR fill:#ff6b6b
+    style MINOR fill:#ffd43b
+    style PATCH fill:#51cf66
+```
 
 ### Version Bump Decision Flow
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+flowchart TD
+    A["New Release"] --> B{"Did you break<br/>existing API?"}
+    B -->|"Yes"| C["MAJOR bump<br/>1.0.0 → 2.0.0"]
+    B -->|"No"| D{"Did you add<br/>new features?"}
+    D -->|"Yes"| E["MINOR bump<br/>1.0.0 → 1.1.0"]
+    D -->|"No"| F{"Did you fix bugs<br/>or improve perf?"}
+    F -->|"Yes"| G["PATCH bump<br/>1.0.0 → 1.0.1"]
+    F -->|"No"| H["No version bump needed"]
+    
+    style C fill:#ff6b6b
+    style E fill:#ffd43b
+    style G fill:#51cf66
+```
 
 ### Pre-Release Versions
 
@@ -91,7 +157,17 @@ v1.0.0            ← Stable release
 
 ## 4. GitHub Releases
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+flowchart LR
+    TAG["Git Tag<br/>v1.0.0"] -->|"Create Release<br/>on GitHub"| RELEASE["GitHub Release"]
+    
+    RELEASE --> NOTES["Release Notes<br/>(changelog)"]
+    RELEASE --> ASSETS["Binary Assets<br/>(downloadable files)"]
+    RELEASE --> BADGE["Latest Release Badge"]
+    
+    style TAG fill:#ff922b
+    style RELEASE fill:#51cf66
+```
 
 ```bash
 # Create release via GitHub CLI

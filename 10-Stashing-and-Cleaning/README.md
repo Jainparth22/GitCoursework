@@ -18,11 +18,39 @@ Stash **temporarily shelves** uncommitted changes so you can work on something e
 
 ### How Stash Works Internally
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+sequenceDiagram
+    participant WD as Working Directory
+    participant IDX as Staging Area
+    participant STASH as Stash Stack (.git/refs/stash)
+    participant ODB as Object Database
+    
+    Note over WD: You have uncommitted changes
+    
+    WD->>ODB: 1. Save working directory state<br/>as a commit-like object
+    IDX->>ODB: 2. Save index state<br/>as another commit-like object
+    ODB->>STASH: 3. Create stash entry<br/>(special merge commit)
+    STASH->>WD: 4. Reset working directory<br/>to clean state (HEAD)
+    
+    Note over WD: Working directory is now clean!
+    Note over STASH: Changes are safely stored
+```
 
 ### Stash Object Structure
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+graph TD
+    STASH["Stash Entry<br/>(special commit)"]
+    STASH --> P1["Parent 1: HEAD commit"]
+    STASH --> P2["Parent 2: Index state"]
+    STASH --> P3["Parent 3: Untracked files<br/>(if -u flag used)"]
+    STASH --> WD_TREE["Tree: Working directory state"]
+    
+    style STASH fill:#e599f7
+    style P1 fill:#51cf66
+    style P2 fill:#74c0fc
+    style P3 fill:#ffd43b
+```
 
 > A stash is essentially a special merge commit with 2-3 parents: HEAD, staged changes, and optionally untracked files.
 
@@ -32,7 +60,20 @@ Stash **temporarily shelves** uncommitted changes so you can work on something e
 
 ### The Stash Stack
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+graph TD
+    subgraph "Stash Stack (LIFO)"
+        S0["stash@{0} — Most recent<br/>'WIP: fix login bug'"]
+        S1["stash@{1}<br/>'dashboard refactor'"]
+        S2["stash@{2} — Oldest<br/>'api changes'"]
+    end
+    
+    TOP["git stash pop<br/>→ applies stash@{0}"] --> S0
+    
+    style S0 fill:#51cf66
+    style S1 fill:#74c0fc
+    style S2 fill:#ffd43b
+```
 
 ### Common Stash Commands
 
@@ -72,13 +113,43 @@ git stash clear                   # Delete ALL stashes
 
 ### Stash Workflow Decision
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+flowchart TD
+    A["Need to switch branches<br/>but have uncommitted work"] --> B{"Changes worth<br/>keeping?"}
+    B -->|"Yes, but not ready<br/>to commit"| C["git stash push -m 'description'"]
+    B -->|"Yes, close to done"| D["git commit<br/>(WIP commit, amend later)"]
+    B -->|"No, discard them"| E["git restore ."]
+    
+    C --> F["Switch branches, do other work"]
+    F --> G["Switch back"]
+    G --> H["git stash pop"]
+    H --> I["Continue where you left off ✅"]
+    
+    style C fill:#51cf66
+    style I fill:#51cf66
+```
 
 ---
 
 ## 3. Partial Stash (`git stash -p`)
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+flowchart TD
+    A["git stash -p"] --> B["Git shows each hunk"]
+    B --> C{"Stash this hunk?"}
+    C -->|"y"| D["Hunk will be stashed"]
+    C -->|"n"| E["Hunk stays in working dir"]
+    C -->|"s"| F["Split into smaller hunks"]
+    C -->|"q"| G["Done selecting"]
+    
+    D --> H["Show next hunk"]
+    E --> H
+    F --> H
+    H --> C
+    
+    style D fill:#51cf66
+    style E fill:#ff6b6b
+```
 
 ---
 
@@ -89,7 +160,13 @@ git stash branch new-feature-branch stash@{0}
 # Creates branch, checks it out, applies stash, drops stash
 ```
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+flowchart LR
+    A["stash@{0}"] -->|"git stash branch feat"| B["New branch 'feat'<br/>with stash applied<br/>Stash dropped"]
+    
+    style A fill:#ffd43b
+    style B fill:#51cf66
+```
 
 ---
 
@@ -97,7 +174,19 @@ git stash branch new-feature-branch stash@{0}
 
 ### How Clean Works
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+flowchart TD
+    A["git clean"] --> B{"Flags?"}
+    B -->|"-n (dry run)"| C["Show what WOULD be deleted<br/>(safe preview)"]
+    B -->|"-f (force)"| D["Delete untracked files"]
+    B -->|"-fd"| E["Delete untracked files AND directories"]
+    B -->|"-fdx"| F["Delete untracked + ignored files<br/>(nuclear option ☢️)"]
+    
+    style C fill:#51cf66
+    style D fill:#ffd43b
+    style E fill:#ff922b
+    style F fill:#ff6b6b
+```
 
 ```bash
 # Preview what would be deleted (always do this first!)
@@ -118,7 +207,19 @@ git clean -i
 
 ### Clean vs Restore vs Reset
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+graph TD
+    UNDO["Ways to undo changes"]
+    UNDO --> RESTORE["git restore file<br/>Discard modifications<br/>to tracked files"]
+    UNDO --> RESTORE_S["git restore --staged file<br/>Unstage a file<br/>(keep modifications)"]
+    UNDO --> CLEAN["git clean -fd<br/>Remove untracked<br/>files & directories"]
+    UNDO --> RESET["git reset --hard HEAD<br/>Reset everything<br/>to last commit"]
+    
+    style RESTORE fill:#51cf66
+    style RESTORE_S fill:#74c0fc
+    style CLEAN fill:#ffd43b
+    style RESET fill:#ff6b6b
+```
 
 ---
 
