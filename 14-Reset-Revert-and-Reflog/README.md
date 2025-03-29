@@ -19,11 +19,52 @@ Reset moves the branch pointer and optionally affects the staging area and worki
 
 ### The Three Reset Modes
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+flowchart TD
+    subgraph "git reset --soft HEAD~1"
+        S_HEAD["HEAD/Branch<br/>moves back ✅"] 
+        S_INDEX["Staging Area<br/>UNCHANGED ❌"]
+        S_WD["Working Directory<br/>UNCHANGED ❌"]
+    end
+    
+    subgraph "git reset [--mixed] HEAD~1"
+        M_HEAD["HEAD/Branch<br/>moves back ✅"]
+        M_INDEX["Staging Area<br/>RESET to match HEAD ✅"]
+        M_WD["Working Directory<br/>UNCHANGED ❌"]
+    end
+    
+    subgraph "git reset --hard HEAD~1"
+        H_HEAD["HEAD/Branch<br/>moves back ✅"]
+        H_INDEX["Staging Area<br/>RESET ✅"]
+        H_WD["Working Directory<br/>RESET ✅ (DESTRUCTIVE!)"]
+    end
+    
+    style S_HEAD fill:#51cf66
+    style M_HEAD fill:#51cf66
+    style M_INDEX fill:#51cf66
+    style H_HEAD fill:#51cf66
+    style H_INDEX fill:#51cf66
+    style H_WD fill:#ff6b6b
+```
 
 ### Visual: What Each Mode Affects
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+graph LR
+    subgraph "Three Areas"
+        HEAD_B["HEAD<br/>(Branch Pointer)"]
+        IDX["Staging Area<br/>(Index)"]
+        WD["Working<br/>Directory"]
+    end
+    
+    HEAD_B -->|"--soft"| HEAD_B
+    HEAD_B -->|"--mixed"| IDX
+    HEAD_B -->|"--hard"| WD
+    
+    style HEAD_B fill:#51cf66
+    style IDX fill:#ffd43b
+    style WD fill:#ff922b
+```
 
 | Mode | Moves HEAD | Resets Index | Resets Working Dir | Data Loss? |
 |------|-----------|-------------|-------------------|------------|
@@ -33,11 +74,44 @@ Reset moves the branch pointer and optionally affects the staging area and worki
 
 ### Step-by-Step: What Happens Internally
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+sequenceDiagram
+    participant REF as Branch Pointer
+    participant IDX as Staging Area
+    participant WD as Working Directory
+    
+    Note over REF,WD: Starting state: HEAD at C3
+    
+    rect rgb(200, 255, 200)
+        Note over REF: --soft: Only this step
+        REF->>REF: 1. Move branch pointer<br/>from C3 back to C2
+    end
+    
+    rect rgb(255, 255, 200)
+        Note over IDX: --mixed: Steps 1-2
+        IDX->>IDX: 2. Reset staging area<br/>to match C2
+    end
+    
+    rect rgb(255, 200, 200)
+        Note over WD: --hard: Steps 1-3
+        WD->>WD: 3. Reset working directory<br/>to match C2
+    end
+```
 
 ### Use Cases
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+flowchart TD
+    A["I want to undo..."] --> B{"What exactly?"}
+    
+    B -->|"Undo commit but<br/>keep changes staged"| SOFT["git reset --soft HEAD~1<br/>Then: re-commit differently"]
+    B -->|"Undo commit and<br/>unstage changes"| MIXED["git reset HEAD~1<br/>Then: re-stage and commit"]
+    B -->|"Completely erase<br/>last commit + changes"| HARD["git reset --hard HEAD~1<br/>⚠️ PERMANENT DATA LOSS"]
+    
+    style SOFT fill:#51cf66
+    style MIXED fill:#ffd43b
+    style HARD fill:#ff6b6b
+```
 
 ```bash
 # Soft: Undo commit, keep everything staged
@@ -61,13 +135,44 @@ git restore --staged file.txt
 
 ### How Revert Differs from Reset
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+graph RL
+    subgraph "git reset HEAD~1 (REWRITES history)"
+        C1R["C1"] 
+        C2R["C2"] --> C1R
+        MAINR["main"] -.->|"moved back"| C1R
+        C2R -.->|"orphaned!"| C2R
+    end
+```
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+graph RL
+    subgraph "git revert HEAD (ADDS new commit)"
+        C1V["C1"]
+        C2V["C2"] --> C1V
+        RV["Revert C2<br/>(undoes C2's changes)"] --> C2V
+        MAINV["main"] -.-> RV
+    end
+    
+    style RV fill:#e599f7
+```
 
 ### How Revert Works Internally
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+sequenceDiagram
+    participant Git as Git Engine
+    participant ODB as Object Database
+    
+    Note over Git: git revert abc123
+    
+    Git->>ODB: 1. Read commit abc123
+    Git->>Git: 2. Compute diff between<br/>abc123 and its parent
+    Git->>Git: 3. Apply the INVERSE<br/>of that diff
+    Git->>ODB: 4. Create NEW commit<br/>with the inverse changes
+    
+    Note over Git: History is preserved!<br/>Original commit still exists.
+```
 
 ```bash
 # Revert a single commit
@@ -87,7 +192,18 @@ git revert --abort
 
 ## 3. Reset vs Revert — Decision Flowchart
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+flowchart TD
+    A["Need to undo a commit"] --> B{"Has it been pushed<br/>to a shared branch?"}
+    B -->|"Yes (public)"| C["USE REVERT ✅<br/>Creates new commit<br/>History preserved"]
+    B -->|"No (private only)"| D{"Want to keep the changes?"}
+    D -->|"Yes"| E["git reset --soft HEAD~1<br/>Changes stay staged"]
+    D -->|"No"| F["git reset --hard HEAD~1<br/>⚠️ Everything gone"]
+    
+    style C fill:#51cf66
+    style E fill:#74c0fc
+    style F fill:#ff6b6b
+```
 
 ---
 
@@ -97,7 +213,21 @@ The reflog records **every time HEAD moves** — it's your undo history.
 
 ### How Reflog Works Internally
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+graph TD
+    subgraph ".git/logs/HEAD (reflog)"
+        R1["HEAD@{0}: commit: feat: add search<br/>SHA: abc123"]
+        R2["HEAD@{1}: checkout: moving from feat to main<br/>SHA: def456"]
+        R3["HEAD@{2}: commit: fix: handle null<br/>SHA: ghi789"]
+        R4["HEAD@{3}: reset: moving to HEAD~1<br/>SHA: jkl012"]
+        R5["HEAD@{4}: commit: initial commit<br/>SHA: mno345"]
+    end
+    
+    R1 --> R2 --> R3 --> R4 --> R5
+    
+    style R1 fill:#51cf66
+    style R4 fill:#ff922b
+```
 
 ```bash
 # View reflog
@@ -114,7 +244,20 @@ git reset --hard HEAD@{3}
 
 ### Disaster Recovery Scenarios
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+flowchart TD
+    A["Disaster!"] --> B{"What happened?"}
+    
+    B -->|"Accidental git reset --hard"| C["git reflog → find old SHA<br/>git reset --hard HEAD@{n}"]
+    B -->|"Deleted a branch"| D["git reflog → find last commit<br/>git branch recovered-branch SHA"]
+    B -->|"Bad rebase"| E["git reflog → find pre-rebase SHA<br/>git reset --hard HEAD@{n}"]
+    B -->|"Lost commits"| F["git reflog → find any commit<br/>git cherry-pick SHA"]
+    
+    style C fill:#51cf66
+    style D fill:#51cf66
+    style E fill:#51cf66
+    style F fill:#51cf66
+```
 
 ### Reflog Expiry
 
@@ -137,7 +280,33 @@ git reflog --date=relative
 
 ## 5. Complete Undo Strategy Decision Tree
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+flowchart TD
+    START["I need to undo something!"]
+    START --> Q1{"What do you want to undo?"}
+    
+    Q1 -->|"Unstage a file"| A1["git restore --staged file"]
+    Q1 -->|"Discard file changes"| A2["git restore file"]
+    Q1 -->|"Amend last commit"| A3["git commit --amend"]
+    Q1 -->|"Undo last commit"| Q2{"Pushed to remote?"}
+    Q1 -->|"Undo old commit"| Q3{"Pushed to remote?"}
+    Q1 -->|"Recover lost work"| A4["git reflog"]
+    
+    Q2 -->|"No"| A5["git reset --soft HEAD~1"]
+    Q2 -->|"Yes"| A6["git revert HEAD"]
+    
+    Q3 -->|"No"| A7["git rebase -i (drop commit)"]
+    Q3 -->|"Yes"| A8["git revert <SHA>"]
+    
+    style A1 fill:#51cf66
+    style A2 fill:#51cf66
+    style A3 fill:#74c0fc
+    style A4 fill:#ffd43b
+    style A5 fill:#74c0fc
+    style A6 fill:#51cf66
+    style A7 fill:#ff922b
+    style A8 fill:#51cf66
+```
 
 ---
 

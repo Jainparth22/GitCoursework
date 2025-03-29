@@ -15,7 +15,27 @@
 
 ## 1. Merge Strategies Overview
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+flowchart TD
+    A["git merge"] --> B{"How many<br/>branches?"}
+    B -->|"2 branches"| C{"Can fast-forward?"}
+    C -->|"Yes"| FF["Fast-Forward<br/>(just move pointer)"]
+    C -->|"No"| ORT["ort Strategy<br/>(default 3-way merge)"]
+    B -->|"3+ branches"| OCT["Octopus Strategy"]
+    
+    ORT --> OPTIONS["Strategy Options"]
+    OPTIONS --> X_OURS["-X ours<br/>On conflict: keep ours"]
+    OPTIONS --> X_THEIRS["-X theirs<br/>On conflict: keep theirs"]
+    OPTIONS --> PATIENCE["-X patience<br/>Better diff algorithm"]
+    
+    A --> STRAT_OURS["--strategy=ours<br/>Ignore all their changes"]
+    A --> STRAT_SUB["--strategy=subtree<br/>For subtree merges"]
+    
+    style FF fill:#51cf66
+    style ORT fill:#74c0fc
+    style OCT fill:#ffd43b
+    style STRAT_OURS fill:#ff6b6b
+```
 
 ### Strategy Comparison
 
@@ -31,11 +51,45 @@
 
 ## 2. The `ort` Strategy (Default) — Deep Dive
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+sequenceDiagram
+    participant Git as Git Engine
+    participant Base as Merge Base
+    participant Ours as Our Branch
+    participant Theirs as Their Branch
+    
+    Git->>Base: 1. Find common ancestor
+    Git->>Git: 2. Compute diff: Base → Ours
+    Git->>Git: 3. Compute diff: Base → Theirs
+    
+    Git->>Git: 4. For each file:
+    
+    alt Only one side changed
+        Git->>Git: Take the changed version ✅
+    else Both sides changed different lines
+        Git->>Git: Merge both changes ✅
+    else Both sides changed same lines
+        Git->>Git: ⚠️ CONFLICT — mark for manual resolution
+    end
+    
+    Note over Git: 5. Handle renames<br/>(detect file moves/renames)
+    Git->>Git: 6. Create merge commit
+```
 
 ### `-X ours` vs `-X theirs` (Strategy Options)
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+graph TD
+    CONFLICT["Conflict detected!"]
+    CONFLICT --> XOURS["-X ours<br/>Automatically take OUR version<br/>for conflicting sections only"]
+    CONFLICT --> XTHEIRS["-X theirs<br/>Automatically take THEIR version<br/>for conflicting sections only"]
+    
+    NOTE["Note: Non-conflicting changes<br/>from both sides are STILL merged!"]
+    
+    style XOURS fill:#51cf66
+    style XTHEIRS fill:#74c0fc
+    style NOTE fill:#ffd43b
+```
 
 ```bash
 # For conflicts, prefer our changes
@@ -47,9 +101,27 @@ git merge -X theirs feature
 
 ### `--strategy=ours` (Ignore All Their Changes)
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+graph RL
+    subgraph "Before"
+        C1A["C1"]
+        C2A["C2 (ours)"] --> C1A
+        C3A["C3 (theirs)"] --> C1A
+    end
+```
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid 
+graph RL
+    subgraph "After: git merge -s ours feature"
+        C1B["C1"]
+        C2B["C2"] --> C1B
+        C3B["C3"] --> C1B
+        M["Merge commit<br/>(tree = C2's tree exactly!)"] --> C2B
+        M --> C3B
+    end
+    
+    style M fill:#e599f7
+```
 
 > **All of feature's changes are discarded.** The merge commit's tree is identical to ours.
 
@@ -59,7 +131,22 @@ git merge -X theirs feature
 
 ### How rerere Works
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+sequenceDiagram
+    participant Dev as Developer
+    participant Rerere as Rerere Cache
+    
+    Note over Dev: First time conflict
+    Dev->>Dev: Resolve conflict manually
+    Dev->>Rerere: rerere records the resolution
+    
+    Note over Dev: Same conflict appears again<br/>(e.g., during another merge/rebase)
+    
+    Dev->>Rerere: Git checks rerere cache
+    Rerere-->>Dev: ✅ Auto-resolves using<br/>recorded resolution!
+    
+    Note over Dev: No manual work needed!
+```
 
 ```bash
 # Enable rerere
@@ -80,13 +167,35 @@ git rerere diff
 
 ### When rerere Is Most Useful
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+flowchart TD
+    A["rerere shines when:"]
+    A --> B["Rebasing long-lived branches<br/>(same conflicts repeat)"]
+    A --> C["Testing topic branches<br/>(merge → test → reset → merge again)"]
+    A --> D["Cherry-picking across<br/>multiple branches"]
+    
+    style B fill:#51cf66
+    style C fill:#51cf66
+    style D fill:#51cf66
+```
 
 ---
 
 ## 4. Octopus Merge (3+ Branches)
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+graph RL
+    C1["C1"]
+    F1["Feature A"] --> C1
+    F2["Feature B"] --> C1
+    F3["Feature C"] --> C1
+    M["Octopus Merge<br/>(3 parents!)"] --> F1
+    M --> F2
+    M --> F3
+    MAIN["main"] -.-> M
+    
+    style M fill:#e599f7
+```
 
 ```bash
 # Merge multiple branches at once
@@ -100,7 +209,19 @@ git merge feature-a feature-b feature-c
 
 ## 5. Advanced Conflict Resolution Tools
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+flowchart TD
+    A["Complex Conflict?"] --> B{"Choose tool"}
+    B --> C["git mergetool<br/>Visual 3-way merge"]
+    B --> D["VS Code merge editor<br/>Built-in conflict UI"]
+    B --> E["Manual editing<br/>Edit conflict markers"]
+    
+    C --> C1["Configured via:<br/>git config merge.tool vimdiff"]
+    
+    style C fill:#74c0fc
+    style D fill:#51cf66
+    style E fill:#ffd43b
+```
 
 ```bash
 # Set merge tool

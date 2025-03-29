@@ -17,17 +17,83 @@
 
 Git hooks are **scripts** that run automatically at specific points in the Git workflow.
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+flowchart LR
+    subgraph "Git Workflow with Hooks"
+        A["git commit"] --> PRE["pre-commit<br/>hook runs"]
+        PRE -->|"exit 0"| MSG["commit-msg<br/>hook runs"]
+        PRE -->|"exit 1"| ABORT1["❌ Commit aborted"]
+        MSG -->|"exit 0"| POST["post-commit<br/>hook runs"]
+        MSG -->|"exit 1"| ABORT2["❌ Commit aborted"]
+        POST --> DONE["✅ Commit complete"]
+    end
+    
+    style PRE fill:#ffd43b
+    style MSG fill:#74c0fc
+    style POST fill:#51cf66
+    style ABORT1 fill:#ff6b6b
+    style ABORT2 fill:#ff6b6b
+```
 
 ### How Hooks Work Internally
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+sequenceDiagram
+    participant Dev as Developer
+    participant Git as Git Engine
+    participant Hook as .git/hooks/pre-commit
+    
+    Dev->>Git: git commit -m "message"
+    Git->>Hook: Execute pre-commit script
+    
+    alt Script exits with 0
+        Hook-->>Git: Exit code 0 (success)
+        Git->>Git: Proceed with commit
+    else Script exits with non-zero
+        Hook-->>Git: Exit code 1 (failure)
+        Git-->>Dev: ❌ Commit rejected!<br/>Fix issues and try again
+    end
+```
 
 ---
 
 ## 2. Hook Types and Trigger Points
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+graph TD
+    subgraph "Client-Side Hooks"
+        subgraph "Committing"
+            H1["pre-commit<br/>Before commit message editor"]
+            H2["prepare-commit-msg<br/>After default message, before editor"]
+            H3["commit-msg<br/>After message entered"]
+            H4["post-commit<br/>After commit completes"]
+        end
+        
+        subgraph "Email / Patch"
+            H5["applypatch-msg"]
+            H6["pre-applypatch"]
+            H7["post-applypatch"]
+        end
+        
+        subgraph "Other"
+            H8["pre-rebase"]
+            H9["post-checkout"]
+            H10["post-merge"]
+            H11["pre-push"]
+        end
+    end
+    
+    subgraph "Server-Side Hooks"
+        H12["pre-receive<br/>Before push accepted"]
+        H13["update<br/>Per-branch, before update"]
+        H14["post-receive<br/>After push completes"]
+    end
+    
+    style H1 fill:#51cf66
+    style H3 fill:#51cf66
+    style H11 fill:#51cf66
+    style H12 fill:#ff922b
+```
 
 ### Most Important Hooks
 
@@ -89,7 +155,17 @@ exit 0
 
 ## 4. Husky — Modern Hook Management
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+flowchart TD
+    PROBLEM["Problem: .git/hooks/<br/>not shared via Git"]
+    PROBLEM --> SOLUTION["Solution: Husky stores hooks<br/>in .husky/ (tracked by Git)"]
+    SOLUTION --> INSTALL["npm install husky --save-dev"]
+    INSTALL --> INIT["npx husky init"]
+    INIT --> HOOKS[".husky/<br/>pre-commit<br/>commit-msg"]
+    
+    style PROBLEM fill:#ff6b6b
+    style SOLUTION fill:#51cf66
+```
 
 ```bash
 # Install Husky
@@ -109,7 +185,18 @@ echo 'npx commitlint --edit "$1"' > .husky/commit-msg
 
 ## 5. lint-staged — Only Lint Staged Files
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+flowchart TD
+    A["git commit"] --> B["Husky triggers<br/>pre-commit hook"]
+    B --> C["lint-staged runs"]
+    C --> D["Only checks<br/>STAGED files ✅"]
+    D --> E{"All pass?"}
+    E -->|"Yes"| F["Commit proceeds ✅"]
+    E -->|"No"| G["Commit blocked ❌"]
+    
+    style D fill:#51cf66
+    style G fill:#ff6b6b
+```
 
 ```json
 // package.json
@@ -126,7 +213,22 @@ echo 'npx commitlint --edit "$1"' > .husky/commit-msg
 
 ## 6. Complete Hook Pipeline
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+flowchart TD
+    A["Developer runs: git commit"] 
+    --> B["pre-commit hook<br/>(lint-staged)"]
+    --> C["Lint only staged files"]
+    --> D["Format code<br/>(Prettier)"]
+    --> E["Run relevant tests"]
+    --> F["prepare-commit-msg<br/>(add ticket number)"]
+    --> G["commit-msg<br/>(validate format)"]
+    --> H["Commit created ✅"]
+    --> I["post-commit<br/>(notify / log)"]
+    
+    style B fill:#ffd43b
+    style G fill:#74c0fc
+    style H fill:#51cf66
+```
 
 ---
 
