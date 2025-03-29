@@ -15,7 +15,23 @@
 
 ## 1. Reusable Workflows
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+flowchart TD
+    subgraph "Without Reusable Workflows"
+        W1["repo-a/.github/workflows/ci.yml<br/>(copy)"]
+        W2["repo-b/.github/workflows/ci.yml<br/>(copy)"]
+        W3["repo-c/.github/workflows/ci.yml<br/>(copy)"]
+    end
+    
+    subgraph "With Reusable Workflows"
+        SHARED["org/shared/.github/workflows/ci.yml<br/>(single source of truth)"]
+        R1["repo-a: uses: org/shared"] --> SHARED
+        R2["repo-b: uses: org/shared"] --> SHARED
+        R3["repo-c: uses: org/shared"] --> SHARED
+    end
+    
+    style SHARED fill:#51cf66
+```
 
 ```yaml
 # Reusable workflow (callee)
@@ -60,7 +76,20 @@ jobs:
 
 ## 2. Composite Actions
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+graph TD
+    subgraph "Composite Action (shared step bundle)"
+        CA["action.yml"]
+        CA --> S1["Step 1: Setup"]
+        CA --> S2["Step 2: Install"]
+        CA --> S3["Step 3: Configure"]
+    end
+    
+    W1["Workflow A"] -->|"uses: ./actions/setup"| CA
+    W2["Workflow B"] -->|"uses: ./actions/setup"| CA
+    
+    style CA fill:#51cf66
+```
 
 ```yaml
 # .github/actions/setup-project/action.yml
@@ -85,7 +114,22 @@ runs:
 
 ## 3. Matrix Strategies
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+graph TD
+    MATRIX["Matrix Strategy"]
+    MATRIX --> |"os × node × db"| COMBINATIONS["Total: 3 × 3 × 2 = 18 jobs"]
+    
+    subgraph "Generated Jobs"
+        J1["ubuntu + node18 + postgres"]
+        J2["ubuntu + node18 + mysql"]
+        J3["ubuntu + node20 + postgres"]
+        J4["...14 more combinations"]
+        J5["windows + node22 + mysql"]
+    end
+    
+    style MATRIX fill:#74c0fc
+    style COMBINATIONS fill:#ffd43b
+```
 
 ```yaml
 jobs:
@@ -114,7 +158,16 @@ jobs:
 
 ## 4. Caching Dependencies
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+flowchart TD
+    A["npm ci"] --> B{"Cache exists<br/>for this lockfile?"}
+    B -->|"Yes (cache hit)"| C["Restore from cache<br/>⚡ ~5 seconds"]
+    B -->|"No (cache miss)"| D["Download from npm<br/>🐌 ~60 seconds"]
+    D --> E["Save to cache<br/>for next run"]
+    
+    style C fill:#51cf66
+    style D fill:#ff922b
+```
 
 ```yaml
 - uses: actions/cache@v4
@@ -128,7 +181,13 @@ jobs:
 
 ## 5. Artifacts — Passing Data Between Jobs
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+flowchart LR
+    JOB1["Job: build"] -->|"Upload artifact"| STORAGE["GitHub Artifact<br/>Storage"]
+    STORAGE -->|"Download artifact"| JOB2["Job: deploy"]
+    
+    style STORAGE fill:#ffd43b
+```
 
 ```yaml
 jobs:
@@ -155,7 +214,16 @@ jobs:
 
 ## 6. Workflow Chaining
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+graph LR
+    W1["CI Workflow<br/>(on: push)"] -->|"completes"| W2["Deploy Workflow<br/>(on: workflow_run)"]
+    W3["Release Workflow<br/>(on: push tags)"] -->|"calls"| W4["Notify Workflow<br/>(on: workflow_call)"]
+    
+    style W1 fill:#74c0fc
+    style W2 fill:#51cf66
+    style W3 fill:#ff922b
+    style W4 fill:#ffd43b
+```
 
 ```yaml
 # Triggered when another workflow completes

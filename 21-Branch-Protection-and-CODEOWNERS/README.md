@@ -15,7 +15,25 @@
 
 ## 1. Branch Protection — How It Works
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+flowchart TD
+    A["Developer tries<br/>to push to main"] --> B{"Branch Protection<br/>Rules Active?"}
+    B -->|"No"| C["Push accepted ✅"]
+    B -->|"Yes"| D["Check all rules"]
+    
+    D --> R1{"PR required?"}
+    R1 -->|"Direct push"| BLOCK["❌ BLOCKED"]
+    R1 -->|"Via PR"| R2{"Reviews<br/>required?"}
+    R2 -->|"No approvals"| BLOCK
+    R2 -->|"Approved"| R3{"CI checks<br/>required?"}
+    R3 -->|"Failing"| BLOCK
+    R3 -->|"All passing"| R4{"Up to date<br/>with base?"}
+    R4 -->|"No"| BLOCK
+    R4 -->|"Yes"| ALLOW["✅ Merge allowed"]
+    
+    style BLOCK fill:#ff6b6b
+    style ALLOW fill:#51cf66
+```
 
 ### Common Protection Rules
 
@@ -34,7 +52,14 @@
 
 ## 2. CODEOWNERS
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+flowchart TD
+    PR["PR opened<br/>changes: src/api/*.js"] --> CO["CODEOWNERS file checked"]
+    CO --> MATCH["Pattern match:<br/>src/api/ → @backend-team"]
+    MATCH --> ASSIGN["@backend-team<br/>auto-assigned as reviewers"]
+    
+    style ASSIGN fill:#51cf66
+```
 
 ```bash
 # .github/CODEOWNERS
@@ -64,7 +89,21 @@ Dockerfile @org/devops-team
 
 ## 3. GitHub Rulesets (Modern Alternative)
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+graph TD
+    subgraph "Branch Protection (Legacy)"
+        BP["One rule per branch<br/>Settings → Branches"]
+    end
+    
+    subgraph "Rulesets (Modern)"
+        RS["Multiple rules<br/>Pattern matching<br/>Bypass lists<br/>Tag protection too"]
+    end
+    
+    BP -->|"Migrating to"| RS
+    
+    style BP fill:#ffd43b
+    style RS fill:#51cf66
+```
 
 Rulesets support:
 - **Multiple branch patterns** in one rule

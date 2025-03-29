@@ -15,7 +15,24 @@
 
 ## 1. GitHub Issues — How the Ecosystem Works
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+flowchart TD
+    BUG["Bug Report 🐛"] --> ISSUE["GitHub Issue<br/>#42"]
+    FEAT["Feature Request 💡"] --> ISSUE
+    TASK["Task / Question"] --> ISSUE
+    
+    ISSUE --> LABEL["Labels<br/>(bug, feature, priority)"]
+    ISSUE --> ASSIGN["Assignees<br/>(who's working on it)"]
+    ISSUE --> MILE["Milestone<br/>(v2.0 release)"]
+    ISSUE --> PROJECT["Project Board<br/>(Kanban column)"]
+    
+    ISSUE --> BRANCH["Branch created<br/>(feature/#42-login-fix)"]
+    BRANCH --> PR["Pull Request<br/>Closes #42"]
+    PR --> MERGED["PR Merged<br/>→ Issue auto-closed ✅"]
+    
+    style ISSUE fill:#74c0fc
+    style MERGED fill:#51cf66
+```
 
 ### Issue Templates
 
@@ -60,11 +77,40 @@ Resolves #42      # Same effect
 
 ## 2. GitHub Projects v2
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+graph TD
+    subgraph "Project Board (Kanban)"
+        TODO["📋 Todo"]
+        PROG["🔄 In Progress"]
+        REVIEW["👀 In Review"]
+        DONE["✅ Done"]
+    end
+    
+    ISSUE1["Issue #1"] --> TODO
+    ISSUE2["Issue #2"] --> PROG
+    PR1["PR #5"] --> REVIEW
+    ISSUE3["Issue #3"] --> DONE
+    
+    style TODO fill:#ff6b6b
+    style PROG fill:#ffd43b
+    style REVIEW fill:#74c0fc  
+    style DONE fill:#51cf66
+```
 
 ### Project Automations
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+flowchart TD
+    A["Issue created"] -->|"Auto"| B["Add to 'Todo' column"]
+    C["PR opened for issue"] -->|"Auto"| D["Move to 'In Progress'"]
+    E["PR approved"] -->|"Auto"| F["Move to 'In Review'"]
+    G["PR merged"] -->|"Auto"| H["Move to 'Done'<br/>Close issue"]
+    
+    style B fill:#ff6b6b
+    style D fill:#ffd43b
+    style F fill:#74c0fc
+    style H fill:#51cf66
+```
 
 ---
 

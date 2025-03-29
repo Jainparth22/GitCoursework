@@ -15,13 +15,46 @@
 
 ## 1. GitHub Security Features Overview
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+graph TD
+    SEC["GitHub Security"]
+    SEC --> DEP["Dependabot<br/>Dependency vulnerabilities"]
+    SEC --> CS["Code Scanning<br/>(CodeQL)"]
+    SEC --> SS["Secret Scanning<br/>Leaked credentials"]
+    SEC --> SA["Security Advisories<br/>CVE management"]
+    
+    DEP --> DEP_A["Alerts<br/>(notify about CVEs)"]
+    DEP --> DEP_U["Updates<br/>(auto-create PRs)"]
+    DEP --> DEP_V["Version Updates<br/>(keep deps current)"]
+    
+    style SEC fill:#ff6b6b
+    style DEP fill:#ff922b
+    style CS fill:#74c0fc
+    style SS fill:#ffd43b
+```
 
 ---
 
 ## 2. Dependabot — How It Works
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+sequenceDiagram
+    participant DB as Dependabot
+    participant GH as GitHub
+    participant GHDB as Advisory Database
+    participant Repo as Your Repository
+    
+    DB->>Repo: Read package.json / requirements.txt
+    DB->>GHDB: Check for known CVEs
+    
+    alt Vulnerabilities found
+        DB->>GH: Create Security Alert
+        DB->>Repo: Open PR with version bump
+        Note over Repo: PR: "Bump lodash<br/>4.17.19 → 4.17.21"
+    end
+    
+    Note over DB: Runs daily by default
+```
 
 ### Dependabot Configuration
 
@@ -51,17 +84,50 @@ updates:
 
 ## 3. Secret Scanning
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+flowchart TD
+    A["Developer pushes code"] --> B["GitHub scans<br/>commit content"]
+    B --> C{"Contains secrets?<br/>(API keys, tokens,<br/>passwords)"}
+    C -->|"Yes"| D["Alert sent to:<br/>• Repo admins<br/>• Service provider<br/>(if partner program)"]
+    C -->|"No"| E["No action needed ✅"]
+    
+    D --> F["Provider may<br/>auto-revoke token!"]
+    
+    style D fill:#ff6b6b
+    style F fill:#ff922b
+    style E fill:#51cf66
+```
 
 ### Push Protection (Block Before It's Pushed)
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+flowchart TD
+    A["git push"] --> B{"Secret detected<br/>in push?"}
+    B -->|"Yes"| C["❌ Push BLOCKED<br/>Remove secret first"]
+    B -->|"No"| D["✅ Push succeeds"]
+    
+    C --> E["Options:<br/>1. Remove secret<br/>2. Mark as false positive<br/>3. Use .env + .gitignore"]
+    
+    style C fill:#ff6b6b
+    style D fill:#51cf66
+```
 
 ---
 
 ## 4. Code Scanning with CodeQL
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+flowchart TD
+    A["Code pushed / PR opened"] --> B["CodeQL analyzes code"]
+    B --> C["Builds semantic model"]
+    C --> D["Runs security queries"]
+    D --> E{"Vulnerabilities<br/>found?"}
+    E -->|"Yes"| F["Create alerts with<br/>severity + fix suggestions"]
+    E -->|"No"| G["✅ Clean"]
+    
+    style F fill:#ff6b6b
+    style G fill:#51cf66
+```
 
 ```yaml
 # .github/workflows/codeql.yml
@@ -86,7 +152,23 @@ jobs:
 
 ## 5. Secrets Management Best Practices
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+graph TD
+    GOOD["✅ Good Practices"]
+    GOOD --> G1["Use GitHub Secrets<br/>(encrypted at rest)"]
+    GOOD --> G2["Use environment-scoped<br/>secrets"]
+    GOOD --> G3["Rotate secrets regularly"]
+    GOOD --> G4["Use OIDC for cloud auth<br/>(no stored credentials)"]
+    
+    BAD["❌ Bad Practices"]
+    BAD --> B1["Hardcode in source code"]
+    BAD --> B2["Commit .env files"]
+    BAD --> B3["Share via chat/email"]
+    BAD --> B4["Use same secret everywhere"]
+    
+    style GOOD fill:#51cf66
+    style BAD fill:#ff6b6b
+```
 
 ```bash
 # .gitignore — ALWAYS include

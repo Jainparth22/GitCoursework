@@ -15,11 +15,54 @@
 
 ## 1. GitHub Actions Architecture
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+graph TD
+    EVENT["Event<br/>(push, PR, schedule)"]
+    EVENT --> WORKFLOW["Workflow<br/>(.github/workflows/*.yml)"]
+    WORKFLOW --> JOB1["Job 1: build"]
+    WORKFLOW --> JOB2["Job 2: test"]
+    WORKFLOW --> JOB3["Job 3: deploy"]
+    
+    JOB1 --> RUNNER1["Runner<br/>(ubuntu-latest)"]
+    JOB2 --> RUNNER2["Runner<br/>(ubuntu-latest)"]
+    JOB3 --> RUNNER3["Runner<br/>(ubuntu-latest)"]
+    
+    RUNNER1 --> S1["Step 1: Checkout"]
+    RUNNER1 --> S2["Step 2: Setup Node"]
+    RUNNER1 --> S3["Step 3: Install deps"]
+    RUNNER1 --> S4["Step 4: Build"]
+    
+    style EVENT fill:#ff922b
+    style WORKFLOW fill:#74c0fc
+    style JOB1 fill:#ffd43b
+    style JOB2 fill:#ffd43b
+    style JOB3 fill:#ffd43b
+    style RUNNER1 fill:#51cf66
+```
 
 ### How a Workflow Executes
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+sequenceDiagram
+    participant Dev as Developer
+    participant GH as GitHub
+    participant Runner as Runner VM
+    
+    Dev->>GH: git push / Open PR
+    GH->>GH: Match event to workflows
+    GH->>Runner: Provision fresh VM
+    
+    Runner->>Runner: Execute Job steps:<br/>1. Clone repo<br/>2. Install tools<br/>3. Run commands
+    
+    alt All steps succeed
+        Runner-->>GH: ✅ Job passed
+    else Any step fails
+        Runner-->>GH: ❌ Job failed
+    end
+    
+    GH-->>Dev: Status check result
+    GH->>Runner: Destroy VM (ephemeral)
+```
 
 ---
 
@@ -64,13 +107,58 @@ jobs:                                # Jobs (run in parallel by default)
 
 ### YAML Components Explained
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+graph TD
+    YML["Workflow YAML"]
+    YML --> NAME["name: Display name"]
+    YML --> ON["on: Event triggers"]
+    YML --> JOBS["jobs: Work units"]
+    
+    ON --> PUSH["push / pull_request"]
+    ON --> SCHEDULE["schedule (cron)"]
+    ON --> WD["workflow_dispatch (manual)"]
+    
+    JOBS --> JOB["job-id:"]
+    JOB --> RUNS["runs-on: OS/runner"]
+    JOB --> NEEDS["needs: dependencies"]
+    JOB --> STEPS["steps: sequential tasks"]
+    
+    STEPS --> USES["uses: pre-built action"]
+    STEPS --> RUN["run: shell command"]
+    STEPS --> WITH["with: action inputs"]
+    STEPS --> ENV["env: variables"]
+    
+    style YML fill:#ff922b
+    style ON fill:#74c0fc
+    style JOBS fill:#51cf66
+```
 
 ---
 
 ## 3. Event Triggers
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+flowchart TD
+    TRIGGERS["Workflow Triggers"]
+    TRIGGERS --> CODE["Code Events"]
+    TRIGGERS --> PR_E["PR Events"]
+    TRIGGERS --> SCHED["Scheduled"]
+    TRIGGERS --> MANUAL["Manual"]
+    
+    CODE --> PUSH["push<br/>(branch filter)"]
+    CODE --> TAG["push tags:<br/>(v*)"]
+    
+    PR_E --> POPEN["pull_request<br/>(opened, sync, closed)"]
+    
+    SCHED --> CRON["schedule:<br/>cron: '0 0 * * *'"]
+    
+    MANUAL --> DISPATCH["workflow_dispatch<br/>(with inputs)"]
+    
+    style CODE fill:#51cf66
+    style PR_E fill:#74c0fc
+    style SCHED fill:#ffd43b
+    style MANUAL fill:#e599f7
+```
 
 ```yaml
 # Multiple triggers
@@ -93,7 +181,18 @@ on:
 
 ## 4. Job Dependencies
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+graph LR
+    BUILD["build"] --> TEST["test"]
+    BUILD --> LINT["lint"]
+    TEST --> DEPLOY["deploy"]
+    LINT --> DEPLOY
+    
+    style BUILD fill:#ffd43b
+    style TEST fill:#74c0fc
+    style LINT fill:#74c0fc
+    style DEPLOY fill:#51cf66
+```
 
 ```yaml
 jobs:
@@ -125,7 +224,22 @@ jobs:
 
 ## 5. Secrets and Environment Variables
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+flowchart TD
+    subgraph "Secret Storage"
+        REPO["Repository Secrets<br/>(Settings → Secrets)"]
+        ENV_S["Environment Secrets<br/>(per environment)"]
+        ORG["Organization Secrets<br/>(shared across repos)"]
+    end
+    
+    REPO --> WF["Available in workflows<br/>secrets.MY_SECRET"]
+    ENV_S --> WF
+    ORG --> WF
+    
+    WF --> MASKED["Value is MASKED<br/>in logs (****)"]
+    
+    style MASKED fill:#51cf66
+```
 
 ```yaml
 steps:
