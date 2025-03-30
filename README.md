@@ -198,10 +198,48 @@ flowchart LR
 3. **Inspect the Internals**: When exploring Phase C, use plumbing commands (`git cat-file -p`, `git ls-tree`) to verify object storage on your own filesystem.
 4. **Complete the Capstone**: Build the [Module 30 Capstone Project](./30-Capstone-Project/README.md) to showcase your complete Git & GitHub proficiency on your resume or portfolio.
 
+---
+
+## 🏆 Capstone Project Highlights
+
+Module 30 challenges you to build a multi-package, full-stack application repository implementing the complete software development lifecycle:
+
+- **Repository Hygiene**: Standardized `.gitignore`, `CONTRIBUTING.md`, issue & PR templates.
+- **Branching Architecture**: Enforced Git Flow or Trunk-Based development with branch protection rules.
+- **Git Hooks**: Pre-commit linting and commit-message validation with Husky.
+- **CI/CD Automation**: GitHub Actions workflow testing matrix, caching dependencies, and automating container builds.
+- **Disaster Recovery**: Simulated merge conflicts, history rebasing, and `reflog` bug fixes.
 
 ---
 
-## 🧭 How to Use This Coursework
+## 🔗 Official Documentation References
 
-1. Follow modules in order
-2. Practice every command
+- [Git Official Documentation](https://git-scm.com/doc)
+- [Pro Git Book (Scott Chacon & Ben Straub)](https://git-scm.com/book/en/v2)
+- [GitHub Documentation](https://docs.github.com)
+- [GitHub Actions Documentation](https://docs.github.com/en/actions)
+- [GitHub CLI Manual](https://cli.github.com/manual)
+- [Conventional Commits Specification](https://www.conventionalcommits.org)
+- [Semantic Versioning 2.0.0](https://semver.org)
+
+---
+
+## 🤝 Contributing
+
+Contributions, feedback, and enhancements are always welcome!
+1. **Fork** the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes following [Conventional Commits](https://www.conventionalcommits.org) (`git commit -m 'feat: add interactive diagram for rebase'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a **Pull Request**
+
+---
+
+## 📄 License
+
+This coursework is open-source and released under the [MIT License](LICENSE).
+
+<p align="center">
+  <sub>Built with ❤️ for software engineers and DevOps learners worldwide.</sub><br>
+  <sub>If you find this coursework helpful, please consider giving it a ⭐ on GitHub!</sub>
+</p>
