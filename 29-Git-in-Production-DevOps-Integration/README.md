@@ -15,21 +15,73 @@
 
 ## 1. GitOps — Git as Single Source of Truth
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+flowchart TD
+    DEV["Developer pushes<br/>infrastructure change"] --> GIT["Git Repository<br/>(desired state)"]
+    GIT --> OPERATOR["GitOps Operator<br/>(ArgoCD / Flux)"]
+    OPERATOR --> COMPARE["Compare:<br/>desired vs actual state"]
+    COMPARE --> SYNC["Auto-sync cluster<br/>to match Git state"]
+    SYNC --> K8S["Kubernetes Cluster<br/>(actual state)"]
+    
+    K8S -->|"drift detected"| COMPARE
+    
+    style GIT fill:#51cf66,stroke:#333,stroke-width:3px
+    style K8S fill:#74c0fc
+```
 
 ### GitOps Principles
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+graph TD
+    GITOPS["GitOps"]
+    GITOPS --> P1["Declarative:<br/>Desired state in Git"]
+    GITOPS --> P2["Versioned:<br/>Full audit trail"]
+    GITOPS --> P3["Automated:<br/>Operators sync state"]
+    GITOPS --> P4["Observable:<br/>Drift detection + alerts"]
+    
+    style P1 fill:#51cf66
+    style P2 fill:#74c0fc
+    style P3 fill:#ffd43b
+    style P4 fill:#e599f7
+```
 
 ---
 
 ## 2. Deployment Strategies with Git
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+flowchart TD
+    DS["Deployment Strategies"]
+    DS --> ROLL["Rolling Deploy<br/>Gradual replacement"]
+    DS --> BG["Blue-Green<br/>Switch between environments"]
+    DS --> CAN["Canary<br/>Small % first"]
+    DS --> FF["Feature Flags<br/>Toggle at runtime"]
+    
+    style ROLL fill:#51cf66
+    style BG fill:#74c0fc
+    style CAN fill:#ffd43b
+    style FF fill:#e599f7
+```
 
 ### Git Tag-Based Deployments
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+sequenceDiagram
+    participant Dev as Developer
+    participant Git as Git/GitHub
+    participant CI as CI/CD Pipeline
+    participant Prod as Production
+    
+    Dev->>Git: git tag v2.1.0
+    Dev->>Git: git push --tags
+    Git->>CI: Tag push event
+    CI->>CI: Build + test
+    CI->>CI: Build Docker image<br/>tagged: app:v2.1.0
+    CI->>Prod: Deploy v2.1.0
+    Prod-->>Dev: Deployment complete ✅
+    
+    Note over Dev: Rollback?<br/>Re-deploy previous tag
+```
 
 ---
 
@@ -60,13 +112,34 @@ jobs:
 
 ### Semantic Release (Fully Automated)
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+flowchart TD
+    A["Commit to main<br/>(Conventional Commits)"] --> B["semantic-release<br/>analyzes commits"]
+    B --> C{"Commit types?"}
+    C -->|"feat:"| D["Minor bump<br/>1.0.0 → 1.1.0"]
+    C -->|"fix:"| E["Patch bump<br/>1.0.0 → 1.0.1"]
+    C -->|"BREAKING CHANGE:"| F["Major bump<br/>1.0.0 → 2.0.0"]
+    
+    D --> G["Auto: create tag,<br/>GitHub release,<br/>publish npm,<br/>update changelog"]
+    E --> G
+    F --> G
+    
+    style G fill:#51cf66
+```
 
 ---
 
 ## 4. Environment-Based Promotion
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+graph LR
+    DEV["Dev<br/>(develop branch)"] -->|"merge"| STAGING["Staging<br/>(release branch)"]
+    STAGING -->|"tag"| PROD["Production<br/>(main + tag)"]
+    
+    style DEV fill:#74c0fc
+    style STAGING fill:#ffd43b
+    style PROD fill:#51cf66
+```
 
 ---
 

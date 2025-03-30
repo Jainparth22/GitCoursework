@@ -14,13 +14,47 @@
 
 ## 1. Branching Models Compared
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+flowchart TD
+    CHOOSE["Choose a Branching Strategy"] --> A{"Team size &<br/>release cadence?"}
+    A -->|"Small team<br/>Continuous deploy"| GHF["GitHub Flow"]
+    A -->|"Large team<br/>Scheduled releases"| GF["Git Flow"]
+    A -->|"Any team<br/>CI/CD mature"| TBD["Trunk-Based Dev"]
+    
+    style GHF fill:#51cf66
+    style GF fill:#74c0fc
+    style TBD fill:#ffd43b
+```
 
 ---
 
 ## 2. Git Flow
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+gitGraph
+    commit id: "init"
+    branch develop
+    commit id: "feat-start"
+    branch feature/login
+    commit id: "login-1"
+    commit id: "login-2"
+    checkout develop
+    merge feature/login id: "merge-feat"
+    commit id: "more-dev"
+    branch release/1.0
+    commit id: "rc-fix-1"
+    checkout main
+    merge release/1.0 id: "v1.0" tag: "v1.0.0"
+    checkout develop
+    merge release/1.0 id: "sync-dev"
+    checkout main
+    branch hotfix/1.0.1
+    commit id: "critical-fix"
+    checkout main
+    merge hotfix/1.0.1 id: "v1.0.1" tag: "v1.0.1"
+    checkout develop
+    merge hotfix/1.0.1 id: "sync-hotfix"
+```
 
 ### Git Flow Branch Roles
 
@@ -36,7 +70,19 @@
 
 ## 3. GitHub Flow (Simplified)
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+graph RL
+    C1["main"] 
+    FB["feature branch<br/>created from main"] -.-> C1
+    FB --> PR["Pull Request"]
+    PR --> REVIEW["Code Review"]
+    REVIEW --> MERGE["Merge to main"]
+    MERGE --> DEPLOY["Deploy immediately"]
+    
+    style FB fill:#74c0fc
+    style PR fill:#ffd43b
+    style DEPLOY fill:#51cf66
+```
 
 **Rules:**
 1. `main` is always deployable
@@ -49,7 +95,20 @@
 
 ## 4. Trunk-Based Development
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+graph RL
+    subgraph "Trunk-Based"
+        T1["main (trunk)"]
+        SL1["short-lived branch<br/>(< 1 day)"] -.-> T1
+        SL2["short-lived branch<br/>(< 1 day)"] -.-> T1
+        
+        T1 --> FF["Feature Flags<br/>(toggle incomplete features)"]
+    end
+    
+    style T1 fill:#51cf66
+    style SL1 fill:#ffd43b
+    style SL2 fill:#ffd43b
+```
 
 **Key practices:**
 - Branches live less than 1 day

@@ -14,7 +14,24 @@
 
 ## 1. Monorepo Architecture
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+graph TD
+    subgraph "Monorepo"
+        ROOT["packages/"]
+        ROOT --> PKG_A["frontend/<br/>(React app)"]
+        ROOT --> PKG_B["backend/<br/>(Node API)"]
+        ROOT --> PKG_C["shared/<br/>(common utils)"]
+        ROOT --> PKG_D["mobile/<br/>(React Native)"]
+        
+        SHARED_CFG["Root Config<br/>package.json<br/>tsconfig.json<br/>.eslintrc"]
+    end
+    
+    style ROOT fill:#74c0fc
+    style PKG_A fill:#51cf66
+    style PKG_B fill:#51cf66
+    style PKG_C fill:#ffd43b
+    style PKG_D fill:#51cf66
+```
 
 ### Monorepo vs Polyrepo
 
@@ -30,7 +47,15 @@
 
 ## 2. Sparse Checkout — Work on a Subset
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+flowchart TD
+    A["Huge monorepo<br/>(100GB, 50 packages)"] --> B["Sparse Checkout"]
+    B --> C["Only checkout<br/>frontend/ and shared/"]
+    C --> D["Local clone: ~2GB<br/>(just what you need)"]
+    
+    style A fill:#ff6b6b
+    style D fill:#51cf66
+```
 
 ```bash
 # Clone without checking out files
@@ -54,7 +79,16 @@ git sparse-checkout list
 
 ## 3. Partial Clone — Download Less Data
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+flowchart TD
+    FULL["Full Clone<br/>All commits + all blobs<br/>100GB"] 
+    BLOBLESS["Blobless Clone<br/>All commits, blobs on demand<br/>5GB"]
+    TREELESS["Treeless Clone<br/>Only reachable trees + blobs<br/>1GB"]
+    
+    style FULL fill:#ff6b6b
+    style BLOBLESS fill:#ffd43b
+    style TREELESS fill:#51cf66
+```
 
 ```bash
 # Blobless clone (recommended)
@@ -71,7 +105,17 @@ git clone --depth=1 URL
 
 ## 4. Performance Optimization
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+graph TD
+    PERF["Git Performance at Scale"]
+    PERF --> FSM["git maintenance<br/>(background optimization)"]
+    PERF --> COM["Commit graph<br/>(faster log, merge-base)"]
+    PERF --> MID["Multi-pack index<br/>(faster object lookup)"]
+    PERF --> SC["Sparse checkout<br/>(less on disk)"]
+    
+    style FSM fill:#51cf66
+    style COM fill:#74c0fc
+```
 
 ```bash
 # Enable background maintenance

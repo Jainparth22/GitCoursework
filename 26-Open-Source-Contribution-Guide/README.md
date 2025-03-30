@@ -15,11 +15,47 @@
 
 ## 1. The Contribution Workflow
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+flowchart TD
+    A["Find a project to contribute to"] --> B["Read CONTRIBUTING.md"]
+    B --> C["Fork the repository"]
+    C --> D["Clone your fork locally"]
+    D --> E["Create a feature branch"]
+    E --> F["Make your changes"]
+    F --> G["Commit with proper messages"]
+    G --> H["Push to your fork"]
+    H --> I["Open Pull Request"]
+    I --> J["Respond to review feedback"]
+    J --> K{"Approved?"}
+    K -->|"Yes"| L["Merged! 🎉"]
+    K -->|"Changes requested"| F
+    
+    style L fill:#51cf66
+```
 
 ### Complete Remote Setup
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+graph TB
+    subgraph "GitHub"
+        UPSTREAM["upstream<br/>(original project)"]
+        ORIGIN["origin<br/>(your fork)"]
+    end
+    
+    subgraph "Local Machine"
+        LOCAL["local clone"]
+    end
+    
+    UPSTREAM -.->|"Fork"| ORIGIN
+    ORIGIN -->|"git clone"| LOCAL
+    LOCAL -->|"git push origin"| ORIGIN
+    LOCAL -->|"git fetch upstream"| UPSTREAM
+    ORIGIN -->|"Pull Request"| UPSTREAM
+    
+    style UPSTREAM fill:#ff922b
+    style ORIGIN fill:#51cf66
+    style LOCAL fill:#74c0fc
+```
 
 ```bash
 # 1. Fork on GitHub (web UI)
@@ -49,7 +85,22 @@ git push origin main
 
 ## 2. Finding Issues to Work On
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+flowchart TD
+    A["Browse Issues"] --> B{"Labels to look for"}
+    B --> C["good first issue<br/>(beginner friendly)"]
+    B --> D["help wanted<br/>(maintainers need help)"]
+    B --> E["documentation<br/>(great for first contribution)"]
+    B --> F["bug<br/>(fix existing problems)"]
+    
+    C --> G["Comment: 'I'd like to<br/>work on this!' 👋"]
+    D --> G
+    E --> G    
+    F --> G
+    G --> H["Wait for maintainer assignment"]
+    
+    style G fill:#51cf66
+```
 
 ---
 
@@ -68,7 +119,20 @@ git push origin main
 
 ## 4. Keeping Your Fork in Sync
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+sequenceDiagram
+    participant Fork as Your Fork
+    participant Local as Local Clone
+    participant Upstream as Original Repo
+    
+    Upstream->>Upstream: New commits by others
+    Local->>Upstream: git fetch upstream
+    Local->>Local: git checkout main
+    Local->>Local: git merge upstream/main
+    Local->>Fork: git push origin main
+    
+    Note over Fork: Fork is now synced ✅
+```
 
 ---
 
