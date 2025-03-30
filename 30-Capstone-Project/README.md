@@ -16,7 +16,23 @@ Build a collaborative task manager demonstrating every Git/GitHub skill.
 
 ### Architecture
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+graph TD
+    subgraph "Repository Structure"
+        ROOT["task-manager/"]
+        ROOT --> FE["frontend/<br/>(React)"]
+        ROOT --> BE["backend/<br/>(Node.js API)"]
+        ROOT --> SHARED["shared/<br/>(types, utils)"]
+        ROOT --> DOCS["docs/<br/>(project docs)"]
+        ROOT --> GH[".github/<br/>(workflows, templates)"]
+        ROOT --> INFRA["infra/<br/>(Docker, config)"]
+    end
+    
+    style ROOT fill:#74c0fc
+    style FE fill:#51cf66
+    style BE fill:#51cf66
+    style SHARED fill:#ffd43b
+```
 
 ---
 
@@ -24,7 +40,15 @@ Build a collaborative task manager demonstrating every Git/GitHub skill.
 
 ### Phase 1: Repository Setup (Modules 1-6)
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+flowchart LR
+    A["git init + .gitignore"] --> B["Initial commit<br/>(Conventional Commits)"]
+    B --> C["Branch structure:<br/>main, develop"]
+    C --> D["First feature branch"]
+    D --> E["Merge with<br/>conflict resolution"]
+    
+    style A fill:#51cf66
+```
 
 - [ ] Initialize repo with proper `.gitignore`
 - [ ] Create README, LICENSE, CONTRIBUTING.md
@@ -41,7 +65,15 @@ Build a collaborative task manager demonstrating every Git/GitHub skill.
 
 ### Phase 3: Advanced Git (Modules 13-18)
 
-> *[Visual Diagram: Architecture & Workflow]*
+```mermaid
+flowchart TD
+    A["Interactive rebase<br/>to clean history"] --> B["Pre-commit hooks<br/>(lint + format)"]
+    B --> C["Commit-msg hook<br/>(Conventional Commits)"]
+    C --> D["Git submodule<br/>(shared library)"]
+    
+    style A fill:#74c0fc
+    style B fill:#ffd43b
+```
 
 - [ ] Explore `.git/` internals with `cat-file` and `ls-tree`
 - [ ] Practice reset (soft/mixed/hard) and recover with reflog
@@ -68,7 +100,33 @@ Build a collaborative task manager demonstrating every Git/GitHub skill.
 
 ---
 
+## 📊 Grading Rubric
+
+| Category | Points | Criteria |
+|----------|--------|----------|
+| Repository Structure | 15 | Clean layout, proper files |
+| Commit History | 20 | Conventional, atomic, meaningful |
+| Branching | 15 | Strategy followed consistently |
+| GitHub Features | 20 | Issues, PRs, Projects, Actions |
+| Advanced Git | 15 | Hooks, rebase, internals knowledge |
+| Documentation | 15 | README, CONTRIBUTING, CHANGELOG |
+| **Total** | **100** | |
 
 ---
 
-> *Note: Practical exercises and advanced topics currently being drafted.*
+## 🔑 Submission
+
+```mermaid
+flowchart TD
+    A["Complete all 5 phases"] --> B["Push to GitHub"]
+    B --> C["Verify CI passes"]
+    C --> D["Tag final release<br/>v1.0.0"]
+    D --> E["Create GitHub Release<br/>with changelog"]
+    E --> F["Share repo link 🎉"]
+    
+    style F fill:#51cf66
+```
+
+---
+
+**[← Module 29](../29-Git-in-Production-DevOps-Integration/README.md)** | **[🏠 Home](../README.md)**
